@@ -43,15 +43,15 @@ install_jq() {
     fi
 }  
 
-setup_iPmart_service() {
-    cat > /etc/systemd/system/iPmart.service << EOF
+setup_waterwall_service() {
+    cat > /etc/systemd/system/waterwall.service << EOF
 [Unit]
-Description=iPmart Service
+Description=Waterwall Service
 After=network.target
 
 [Service]
-ExecStart=/root/Network/iPmart
-WorkingDirectory=/root/Network
+ExecStart=/root/RRT/Waterwall
+WorkingDirectory=/root/RRT
 Restart=always
 RestartSec=5
 User=root
@@ -63,16 +63,16 @@ WantedBy=multi-user.target
 EOF
 
     systemctl daemon-reload
-    systemctl enable iPmart
-    systemctl start iPmart
+    systemctl enable waterwall
+    systemctl start waterwall
 }
 
 while true; do
     echo "Please choose Number:"
-    echo "1. Iran "
-    echo "2. Kharej "
-    echo "3. Uninstall"
-    echo "0. Back"
+    echo "1) Iran "
+    echo "2) Kharej "
+    echo "3) Uninstall"
+    echo "0) Back"
 
     read -p "Enter your choice: " choice
     if [[ "$choice" -eq 1 || "$choice" -eq 2 ]]; then
@@ -88,15 +88,15 @@ while true; do
             sudo service ssh restart
         fi
         sleep 0.5
-        mkdir /root/Network
-        cd /root/Network
-        wget https://github.com/iPmartNetwork/iPmart/releases/download/v1.0/iPmart-linux-64.zip
+        mkdir /root/RRT
+        cd /root/RRT
+        wget https://github.com/radkesvat/WaterWall/releases/download/v1.06/Waterwall-linux-64.zip
         apt install unzip -y
-        unzip iPmart-linux-64.zip
+        unzip Waterwall-linux-64.zip
         sleep 0.5
-        chmod +x iPmart
+        chmod +x Waterwall
         sleep 0.5
-        rm iPmart-linux-64.zip
+        rm Waterwall-linux-64.zip
         cat > core.json << EOF
 {
     "log": {
@@ -135,8 +135,8 @@ EOF
     if [ "$choice" -eq 1 ]; then
         echo "You chose Iran."
         read -p "enter Kharej Ipv4: " ip_remote
-        read -p "Enter the SNI (default: ipmart.shop): " input_sni
-        HOSTNAME=${input_sni:-ipmart.shop}
+        read -p "Enter the SNI (default: www.speedtest.net): " input_sni
+        HOSTNAME=${input_sni:-www.speedtest.net}
         cat > config.json << EOF
 {
     "name": "reverse_reality_server_multiport",
@@ -184,7 +184,7 @@ EOF
             "type": "RealityServer",
             "settings": {
                 "destination": "reality_dest",
-                "password": "02249001"
+                "password": "2249002AHS"
             },
             "next": "reverse_server"
         },
@@ -214,7 +214,7 @@ EOF
 }
 EOF
         sleep 0.5
-        setup_iPmart_service
+        setup_waterwall_service
         sleep 0.5
         echo "Iran IPv4 is: $public_ip"
         echo "Kharej IPv4 is: $ip_remote"
@@ -223,8 +223,8 @@ EOF
     elif [ "$choice" -eq 2 ]; then
         echo "You chose Kharej."
         read -p "enter Iran Ip: " ip_remote
-        read -p "Enter the SNI (default: iPmart.shop): " input_sni
-        HOSTNAME=${input_sni:-ipmart.shop}
+        read -p "Enter the SNI (default: ipmart.shop): " input_sni
+        HOSTNAME=${input_sni:-ipamart.shop}
         cat > config.json << EOF
 {
     "name": "reverse_reality_client_multiport",
@@ -275,7 +275,7 @@ EOF
             "type": "RealityClient",
             "settings": {
                 "sni": "$HOSTNAME",
-                "password": "02249001"
+                "password": "2249002AHS"
             },
             "next": "outbound_to_iran"
         },
@@ -292,22 +292,22 @@ EOF
 }
 EOF
         sleep 0.5
-        setup_iPmart_service
+        setup_waterwall_service
         sleep 0.5
         echo "Kharej IPv4 is: $public_ip"
         echo "Iran IPv4 is: $ip_remote"
         echo "SNI $HOSTNAME"
         echo "Kharej Setup Successfully Created "
     elif [ "$choice" -eq 3 ]; then
-        sudo systemctl stop iPmart
-        sudo systemctl disable iPmart
-        rm -rf /etc/systemd/system/iPmart.service
-        pkill -f iPmart
-        rm -rf /root/Network
+        sudo systemctl stop waterwall
+        sudo systemctl disable waterwall
+        rm -rf /etc/systemd/system/waterwall.service
+        pkill -f Waterwall
+        rm -rf /root/RRT
 
         echo "Removed"
     elif [ "$choice" -eq 0 ]; then
-        echo "Exit"
+        echo "Exit..."
         break
     else
         echo "Invalid choice. Please try again."
