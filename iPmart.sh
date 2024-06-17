@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 echo "                 
@@ -20,7 +19,7 @@ echo "
 			SERVER ISP=$(curl -sS "http://ip-api.com/json/$SERVER_IP" | jq -r '.isp')
 ══════════════════════════════════════════════════════════════════════════════════════"
 
-setup_waterwall_service() {
+setup_iPmart_service() {
     cat > /etc/systemd/system/iPmart.service << EOF
 [Unit]
 Description=iPmart Service
@@ -191,7 +190,7 @@ EOF
 }
 EOF
         sleep 0.5
-        setup_waterwall_service
+        setup_iPmart_service
         sleep 0.5
         echo "Iran IPv4 is: $public_ip"
         echo "Kharej IPv4 is: $ip_remote"
@@ -269,7 +268,7 @@ EOF
 }
 EOF
         sleep 0.5
-        setup_waterwall_service
+        setup_iPmart_service
         sleep 0.5
         echo "Kharej IPv4 is: $public_ip"
         echo "Iran IPv4 is: $ip_remote"
