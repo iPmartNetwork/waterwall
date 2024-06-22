@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "                 
+echo -e "${Purple}               
 ══════════════════════════════════════════════════════════════════════════════════════
         ____                             _     _                                     
     ,   /    )                           /|   /                                  /   
@@ -18,6 +18,16 @@ echo "
 				
 			SERVER ISP=$(curl -sS "http://ip-api.com/json/$SERVER_IP" | jq -r '.isp')
 ══════════════════════════════════════════════════════════════════════════════════════"
+
+Black='\033[0;30m'        # Black
+Red='\033[0;31m'          # Red
+Green='\033[0;32m'        # Green
+Yellow='\033[0;33m'       # Yellow
+Blue='\033[0;34m'         # Blue
+Purple='\033[0;35m'       # Purple
+Cyan='\033[0;36m'         # Cyan
+NC='\033[0m'              # NC
+White='\033[0;96m'        # White
 
 ENTRY="185.199.108.133 raw.githubusercontent.com"
 
@@ -53,11 +63,11 @@ EOF
 }
 
 while true; do
-    echo "Please choose Number:"
-    echo "1) Iran "
-    echo "2) Kharej "
-    echo "3) Uninstall"
-    echo "0) Back"
+    echo -e "${Purple}Select an option:${NC}"
+    echo -e "${White}1. IRAN ${NC}"
+    echo -e "${Cyan}2. KHAREJ ${NC}"
+    echo -e "${White}3. Uninstall${NC}"
+    echo -e "${Cyan}0. Exit ${NC}"
 
     read -p "Enter your choice: " choice
     if [[ "$choice" -eq 1 || "$choice" -eq 2 ]]; then
@@ -75,7 +85,7 @@ while true; do
         sleep 0.5
         mkdir /root/RRT
         cd /root/RRT
-        wget https://github.com/radkesvat/WaterWall/releases/download/v1.06/Waterwall-linux-64.zip
+        wget https://github.com/radkesvat/WaterWall/releases/download/v1.18/Waterwall-linux-64.zip
         apt install unzip -y
         unzip Waterwall-linux-64.zip
         sleep 0.5
@@ -118,10 +128,10 @@ EOF
     fi
 
     if [ "$choice" -eq 1 ]; then
-        echo "You chose Iran."
+        echo -e "${Cyan}You chose Iran.${NC}"
         read -p "enter Kharej Ipv4: " ip_remote
-        read -p "Enter the SNI (default: www.speedtest.net): " input_sni
-        HOSTNAME=${input_sni:-www.speedtest.net}
+        read -p "Enter the SNI (default: ipmart.shop): " input_sni
+        HOSTNAME=${input_sni:-ipmart.shop}
         cat > config.json << EOF
 {
     "name": "reverse_reality_server_multiport",
@@ -201,12 +211,12 @@ EOF
         sleep 0.5
         setup_waterwall_service
         sleep 0.5
-        echo "Iran IPv4 is: $public_ip"
-        echo "Kharej IPv4 is: $ip_remote"
-        echo "SNI $HOSTNAME"
-        echo "Iran Setup Successfully Created "
+        echo -e "${Cyan}Iran IPv4 is: $public_ip${NC}"
+        echo -e "${Purple}Kharej IPv4 is: $ip_remote${NC}"
+        echo -e "${Cyan}SNI $HOSTNAME${NC}"
+        echo -e "${Purple}Iran Setup Successfully Created ${NC}"
     elif [ "$choice" -eq 2 ]; then
-        echo "You chose Kharej."
+        echo -e "${Purple}You chose Kharej.${NC}"
         read -p "enter Iran Ip: " ip_remote
         read -p "Enter the SNI (default: ipmart.shop): " input_sni
         HOSTNAME=${input_sni:-ipamart.shop}
@@ -279,10 +289,10 @@ EOF
         sleep 0.5
         setup_waterwall_service
         sleep 0.5
-        echo "Kharej IPv4 is: $public_ip"
-        echo "Iran IPv4 is: $ip_remote"
-        echo "SNI $HOSTNAME"
-        echo "Kharej Setup Successfully Created "
+        echo -e "${Purple}Kharej IPv4 is: $public_ip${NC}"
+        echo -e "${Cyan}Iran IPv4 is: $ip_remote${NC}"
+        echo -e "${Purple}SNI $HOSTNAME${NC}"
+        echo -e "${Cyan}Kharej Setup Successfully Created ${NC}"
     elif [ "$choice" -eq 3 ]; then
         sudo systemctl stop waterwall
         sudo systemctl disable waterwall
