@@ -10,21 +10,6 @@ _/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/_
 
 ══════════════════════════════════════════════════════════════════════════════════════"
 
-if ! command -v unzip &> /dev/null; then
-        # Check if the system is using apt package manager
-        if command -v apt-get &> /dev/null; then
-            echo -e "${Purple}unzip is not installed. Installing...${NC}"
-            sleep 1
-            sudo apt-get update
-            sudo apt-get install -y unzip
-        else
-            echo -e "${Purple}Error: Unsupported package manager. Please install unzip manually.${NC}\n"
-            read -p "Press any key to continue..."
-            exit 1
-        fi
-    fi
-}
-
 install_jq() {
     if ! command -v jq &> /dev/null; then
         # Check if the system is using apt package manager
