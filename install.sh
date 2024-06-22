@@ -10,23 +10,6 @@ _/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/_
 
 ══════════════════════════════════════════════════════════════════════════════════════"
 
-install_jq() {
-    if ! command -v jq &> /dev/null; then
-        if command -v apt-get &> /dev/null; then
-            echo -e "${Purple}jq is not installed. Installing...${NC}"
-            sleep 1
-            sudo apt-get update
-            sudo apt-get install -y jq
-fi
-echo "                 
-══════════════════════════════════════════════════════════════════════════════════════
-                        SERVER IP=$(hostname -I | awk '{print $1}')
-				
-			SERVER COUNTRY=$(curl -sS "http://ip-api.com/json/$SERVER_IP" | jq -r '.country')
-				
-			SERVER ISP=$(curl -sS "http://ip-api.com/json/$SERVER_IP" | jq -r '.isp')
-══════════════════════════════════════════════════════════════════════════════════════"
-
 Black='\033[0;30m'        # Black
 Red='\033[0;31m'          # Red
 Green='\033[0;32m'        # Green
