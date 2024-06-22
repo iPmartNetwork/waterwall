@@ -28,6 +28,13 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/install.
 <p align="center">_____________________________________________________________________________________
 
 
+[برنامه نویس هسته این پروژه] (https://github.com/radkesvat/WaterWall)
+
+
+<p align="center">_____________________________________________________________________________________
+
+
+
 # تلگرام
 
 [@ipmart_network](https://t.me/ipmart_network)
