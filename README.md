@@ -7,3 +7,11 @@
 <h1 align="center"/>WaterWall Tunnel</h1>
 <h6 align="center"> تانل واتر وال <h6>
 </p>
+
+## پیش نیاز
+
+اوبنتو 20 و بالاتر
+
+'''
+## نصب
+
