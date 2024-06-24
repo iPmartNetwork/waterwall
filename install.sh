@@ -20,6 +20,20 @@ Cyan='\033[0;36m'         # Cyan
 NC='\033[0m'              # NC
 White='\033[0;96m'        # White
  
+    if ! command -v unzip &> /dev/null; then
+        # Check if the system is using apt package manager
+        if command -v apt-get &> /dev/null; then
+            echo -e "${Purple}unzip is not installed. Installing...${NC}"
+            sleep 1
+            sudo apt-get update
+            sudo apt-get install -y unzip
+        else
+            echo -e "${Purple}Error: Unsupported package manager. Please install unzip manually.${NC}\n"
+            read -p "Press any key to continue..."
+            exit 1
+        fi
+    fi
+    (crontab -l 2>/dev/null; echo "0 0 * * * /etc/systemd/system/waterwall.service") | crontab -
 setup_waterwall_service() {
     cat > /etc/systemd/system/waterwall.service << EOF
 [Unit]
@@ -64,10 +78,19 @@ while true; do
             sudo systemctl restart sshd
             sudo service ssh restart
         fi
+    # Check operating system
+    if [[ $(uname) == "Linux" ]]; then
+        ARCH=$(uname -m)
+        DOWNLOAD_URL=$(curl -sSL https://api.github.com/repos/radkesvat/WaterWall/releases/latest | grep -o "https://.*$ARCH.*linux.*zip" | head -n 1)
+    else
+        echo -e "${Purple}Unsupported operating system.${NC}"
+        sleep 1
+        exit 1
+    fi
         sleep 0.5
         mkdir /root/RRT
         cd /root/RRT
-        wget https://github.com/radkesvat/WaterWall/releases/download/v1.18/Waterwall-linux-64.zip
+        wget https://github.com/radkesvat/WaterWall/releases/download/v1.21/Waterwall-linux-64.zip
         apt install unzip -y
         unzip Waterwall-linux-64.zip
         sleep 0.5
@@ -76,7 +99,7 @@ while true; do
         rm Waterwall-linux-64.zip
         cat > core.json << EOF
 {
-    "log": {
+   "log": {
         "path": "log/",
         "core": {
             "loglevel": "DEBUG",
@@ -189,6 +212,7 @@ EOF
         }
     ]
 }
+
 EOF
         sleep 0.5
         setup_waterwall_service
