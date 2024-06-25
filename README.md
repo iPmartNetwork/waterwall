@@ -17,12 +17,20 @@
 
 - اسکریپت روی هر دو سرور اجرا شود (خارج و ایران )
 
+### Reverse
 
 ```
 bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/install.sh)
 
 ```
 
+### Direct
+
+
+```
+bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/direct.sh)
+
+```
 
 
 <p align="center">_____________________________________________________________________________________
