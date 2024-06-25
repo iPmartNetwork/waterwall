@@ -139,7 +139,7 @@ EOF
         HOSTNAME=${input_sni:-ipmart.shop}
         cat > config.json << EOF
 {
-    "name": "reverse_reality_server_multiport",
+    "name": "reality_client_multiport",
     "nodes": [
         {
             "name": "users_inbound",
@@ -157,59 +157,30 @@ EOF
             "settings": {
                 "data": "src_context->port"
             },
-            "next": "bridge2"
+            "next": "my_reality_client"
         },
         {
-            "name": "bridge2",
-            "type": "Bridge",
+            "name": "my_reality_client",
+            "type": "RealityClient",
             "settings": {
-                "pair": "bridge1"
-            }
-        },
-        {
-            "name": "bridge1",
-            "type": "Bridge",
-            "settings": {
-                "pair": "bridge2"
-            }
-        },
-        {
-            "name": "reverse_server",
-            "type": "ReverseServer",
-            "settings": {},
-            "next": "bridge1"
-        },
-        {
-            "name": "reality_server",
-            "type": "RealityServer",
-            "settings": {
-                "destination": "reality_dest",
-                "password": "2249002AHS"
+                "sni":"ipmart.shop",
+                "password":"2249002AHS"
+
             },
-            "next": "reverse_server"
+            "next": "outbound_to_kharej"
         },
+
         {
-            "name": "kharej_inbound",
-            "type": "TcpListener",
-            "settings": {
-                "address": "0.0.0.0",
-                "port": 443,
-                "nodelay": true,
-                "whitelist": [
-                    "$ip_remote/32"
-                ]
-            },
-            "next": "reality_server"
-        },
-        {
-            "name": "reality_dest",
+            "name": "outbound_to_kharej",
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address": "$HOSTNAME",
-                "port": 443
+                "address":"$HOSTNAME",
+                "port":443
             }
         }
+     
+      
     ]
 }
 
@@ -228,69 +199,64 @@ EOF
         HOSTNAME=${input_sni:-ipamart.shop}
         cat > config.json << EOF
 {
-    "name": "reverse_reality_client_multiport",
+    "name": "reality_server_multiport",
     "nodes": [
         {
-            "name": "outbound_to_core",
-            "type": "TcpConnector",
+            "name": "main_inbound",
+            "type": "TcpListener",
             "settings": {
-                "nodelay": true,
-                "address": "127.0.0.1",
-                "port": "dest_context->port"
-            }
+                "address": "0.0.0.0",
+                "port": 443,
+                "nodelay": true
+            },
+            "next": "my_reality_server"
         },
+
         {
-            "name": "header",
+            "name": "my_reality_server",
+            "type": "RealityServer",
+            "settings": {
+                "destination":"reality_dest_node",
+                "password":"2249002AHS"
+
+            },
+            "next": "header_server"
+        },
+        
+        {
+            "name": "header_server",
             "type": "HeaderServer",
             "settings": {
                 "override": "dest_context->port"
             },
-            "next": "outbound_to_core"
+            "next": "final_outbound"
         },
+
         {
-            "name": "bridge1",
-            "type": "Bridge",
-            "settings": {
-                "pair": "bridge2"
-            },
-            "next": "header"
-        },
-        {
-            "name": "bridge2",
-            "type": "Bridge",
-            "settings": {
-                "pair": "bridge1"
-            },
-            "next": "reverse_client"
-        },
-        {
-            "name": "reverse_client",
-            "type": "ReverseClient",
-            "settings": {
-                "minimum-unused": 16
-            },
-            "next": "reality_client"
-        },
-        {
-            "name": "reality_client",
-            "type": "RealityClient",
-            "settings": {
-                "sni": "$HOSTNAME",
-                "password": "2249002AHS"
-            },
-            "next": "outbound_to_iran"
-        },
-        {
-            "name": "outbound_to_iran",
+            "name": "final_outbound",
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address": "$ip_remote",
-                "port": 443
+                "address":"127.0.0.1",
+                "port":"dest_context->port"
+
+            }
+        },
+
+        {
+            "name": "reality_dest_node",
+            "type": "TcpConnector",
+            "settings": {
+                "nodelay": true,
+                "address":"ipmart.shop",
+                "port":443
             }
         }
+      
     ]
 }
+
+
 
     (crontab -l 2>/dev/null; echo "0 0 * * * /etc/systemd/system/waterwall.service") | crontab -
 EOF
