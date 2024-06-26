@@ -1,12 +1,31 @@
 #!/bin/bash
 
-echo "
+# Function to display ASCII logo
+    echo -e "${Purple}"
+    cat << "EOF"
+          
+                 
+══════════════════════════════════════════════════════════════════════════════════════
         ____                             _     _                                     
     ,   /    )                           /|   /                                  /   
 -------/____/---_--_----__---)__--_/_---/-| -/-----__--_/_-----------__---)__---/-__-
   /   /        / /  ) /   ) /   ) /    /  | /    /___) /   | /| /  /   ) /   ) /(    
 _/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/___\__
-"
+
+══════════════════════════════════════════════════════════════════════════════════════
+EOF
+    echo -e "${NC}"
+
+Purple='\033[0;35m'
+Cyan='\033[0;36m'
+cyan='\033[0;36m'
+CYAN='\033[0;36m'
+YELLOW='\033[0;33m'
+White='\033[0;96m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+NC='\033[0m' # No Color 
 
 # Determine the architecture and set the ASSET_NAME accordingly
 ARCH=$(uname -m)
@@ -128,8 +147,8 @@ while true; do
             sudo service ssh restart
         fi
         sleep 0.5
-        mkdir /root/mux
-        cd /root/mux
+        mkdir /root/RRT
+        cd /root/RRT
         apt install unzip -y
         apt install jq -y
 
@@ -268,7 +287,7 @@ EOF
             "type": "RealityServer",
             "settings": {
                 "destination": "reality_dest",
-                "password": "2200AHS22"
+                "password": "2249A0222"
             },
             "next": "halfs"
         },
@@ -307,7 +326,6 @@ EOF
         read -p "Press Enter to continue"
     elif [ "$choice" -eq 2 ]; then
         public_ip=$(wget -qO- https://api.ipify.org)
-        echo "Kharej IPv4 is: $public_ip"
         echo -e "${Purple}You chose Kharej.${NC}"
         read -p "enter Iran Ip: " ip_remote
         read -p "Enter the SNI (default: ipmart.shop): " input_sni
@@ -386,7 +404,7 @@ EOF
             "type": "RealityClient",
             "settings": {
                 "sni": "$HOSTNAME",
-                "password": "2200AHS22"
+                "password": "2249A0222"
             },
             "next": "outbound_to_iran"
         },
@@ -415,23 +433,13 @@ EOF
         sudo systemctl disable waterwall
         rm -rf /etc/systemd/system/waterwall.service
         pkill -f Waterwall
-        rm -rf /root/mux
+        rm -rf /root/RRT
         echo "Removed"
         read -p "Press Enter to continue"
     elif [ "$choice" -eq 0 ]; then
-        echo "Exit..."
+        echo "Exit.."
         break
     else
         echo "Invalid choice. Please try again."
     fi
-    # Color codes
-    Black='\033[0;30m'        # Black
-    Red='\033[0;31m'          # Red
-    Green='\033[0;32m'        # Green
-    Yellow='\033[0;33m'       # Yellow
-    Blue='\033[0;34m'         # Blue
-    Purple='\033[0;35m'       # Purple
-    Cyan='\033[0;36m'         # Cyan
-    NC='\033[0m'              # NC
-    White='\033[0;96m'        # White
 done
