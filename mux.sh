@@ -1,14 +1,12 @@
 #!/bin/bash
 
-echo -e "${Purple}               
-══════════════════════════════════════════════════════════════════════════════════════
+echo "
         ____                             _     _                                     
     ,   /    )                           /|   /                                  /   
 -------/____/---_--_----__---)__--_/_---/-| -/-----__--_/_-----------__---)__---/-__-
   /   /        / /  ) /   ) /   ) /    /  | /    /___) /   | /| /  /   ) /   ) /(    
 _/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/___\__
-
-══════════════════════════════════════════════════════════════════════════════════════"
+"
 
 # Determine the architecture and set the ASSET_NAME accordingly
 ARCH=$(uname -m)
@@ -201,10 +199,10 @@ EOF
 
     if [ "$choice" -eq 1 ]; then
         public_ip=$(wget -qO- https://api.ipify.org)
-        echo "Iran IPv4 is: $public_ip"
+        echo -e "${Cyan}You chose Iran.${NC}"
         read -p "enter Kharej Ipv4: " ip_remote
-        read -p "Enter the SNI (default: sahab.ir): " input_sni
-        HOSTNAME=${input_sni:-sahab.ir}
+        read -p "Enter the SNI (default: ipmart.shop): " input_sni
+        HOSTNAME=${input_sni:-ipmart.shop}
         cat > config.json << EOF
 {
     "name": "reverse_reality_grpc_hd_multiport_server",
@@ -270,7 +268,7 @@ EOF
             "type": "RealityServer",
             "settings": {
                 "destination": "reality_dest",
-                "password": "passwd"
+                "password": "2200AHS22"
             },
             "next": "halfs"
         },
@@ -302,17 +300,18 @@ EOF
         sleep 0.5
         setup_waterwall_service
         sleep 0.5
-        echo "Iran IPv4 is: $public_ip"
-        echo "Kharej IPv4 is: $ip_remote"
-        echo "SNI $HOSTNAME"
-        echo "Iran Setup Successfully Created "
+        echo -e "${Cyan}Iran IPv4 is: $public_ip${NC}"
+        echo -e "${Purple}Kharej IPv4 is: $ip_remote${NC}"
+        echo -e "${Cyan}SNI $HOSTNAME${NC}"
+        echo -e "${Purple}Iran Setup Successfully Created ${NC}"
         read -p "Press Enter to continue"
     elif [ "$choice" -eq 2 ]; then
         public_ip=$(wget -qO- https://api.ipify.org)
         echo "Kharej IPv4 is: $public_ip"
+        echo -e "${Purple}You chose Kharej.${NC}"
         read -p "enter Iran Ip: " ip_remote
-        read -p "Enter the SNI (default: sahab.ir): " input_sni
-        HOSTNAME=${input_sni:-sahab.ir}
+        read -p "Enter the SNI (default: ipmart.shop): " input_sni
+        HOSTNAME=${input_sni:-ipamart.shop}
         cat > config.json << EOF
 {
     "name": "reverse_reality_grpc_client_hd_multiport_client",
@@ -387,7 +386,7 @@ EOF
             "type": "RealityClient",
             "settings": {
                 "sni": "$HOSTNAME",
-                "password": "passwd"
+                "password": "2200AHS22"
             },
             "next": "outbound_to_iran"
         },
@@ -419,8 +418,8 @@ EOF
         rm -rf /root/mux
         echo "Removed"
         read -p "Press Enter to continue"
-    elif [ "$choice" -eq 9 ]; then
-        echo "Going back..."
+    elif [ "$choice" -eq 0 ]; then
+        echo "Exit..."
         break
     else
         echo "Invalid choice. Please try again."
