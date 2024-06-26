@@ -1,5 +1,93 @@
 #!/bin/bash
 
+echo -e "${Purple}               
+══════════════════════════════════════════════════════════════════════════════════════
+        ____                             _     _                                     
+    ,   /    )                           /|   /                                  /   
+-------/____/---_--_----__---)__--_/_---/-| -/-----__--_/_-----------__---)__---/-__-
+  /   /        / /  ) /   ) /   ) /    /  | /    /___) /   | /| /  /   ) /   ) /(    
+_/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/___\__
+
+══════════════════════════════════════════════════════════════════════════════════════"
+
+# Determine the architecture and set the ASSET_NAME accordingly
+ARCH=$(uname -m)
+if [ "$ARCH" == "aarch64" ]; then
+  ASSET_NAME="Waterwall-linux-arm64.zip"
+elif [ "$ARCH" == "x86_64" ]; then
+  ASSET_NAME="Waterwall-linux-64.zip"
+else
+  echo "Unsupported architecture: $ARCH"
+  exit 1
+fi
+
+# Function to download and unzip the release
+download_and_unzip() {
+  local url="$1"
+  local dest="$2"
+
+  echo "Downloading $dest from $url..."
+  wget -q -O "$dest" "$url"
+  if [ $? -ne 0 ]; then
+    echo "Error: Unable to download file."
+    return 1
+  fi
+
+  echo "Unzipping $dest..."
+  unzip -o "$dest"
+  if [ $? -ne 0 ]; then
+    echo "Error: Unable to unzip file."
+    return 1
+  fi
+  
+  sleep 0.5
+  chmod +x Waterwall
+  rm "$dest"
+
+  echo "Download and unzip completed successfully."
+}
+
+# Function to get download URL for the latest release
+get_latest_release_url() {
+  local api_url="https://api.github.com/repos/radkesvat/WaterWall/releases/latest"
+
+  echo "Fetching latest release data..." >&2
+  local response=$(curl -s "$api_url")
+  if [ $? -ne 0 ]; then
+    echo "Error: Unable to fetch release data." >&2
+    return 1
+  fi
+
+  local asset_url=$(echo "$response" | jq -r ".assets[] | select(.name == \"$ASSET_NAME\") | .browser_download_url")
+  if [ -z "$asset_url" ]; then
+    echo "Error: Asset not found." >&2
+    return 1
+  fi
+
+  echo "$asset_url"
+}
+
+# Function to get download URL for a specific release version
+get_specific_release_url() {
+  local version=$1
+  local api_url="https://api.github.com/repos/radkesvat/WaterWall/releases/tags/$version"
+
+  echo "Fetching release data for version $version..." >&2
+  response=$(curl -s $api_url)
+  if [ $? -ne 0 ]; then
+    echo "Error: Unable to fetch release data for version $version." >&2
+    exit 1
+  fi
+
+  local asset_url=$(echo $response | jq -r ".assets[] | select(.name == \"$ASSET_NAME\") | .browser_download_url")
+  if [ -z "$asset_url" ]; then
+    echo "Error: Asset not found for version $version." >&2
+    exit 1
+  fi
+
+  echo $asset_url
+}
+
 setup_waterwall_service() {
     cat > /etc/systemd/system/waterwall.service << EOF
 [Unit]
@@ -18,32 +106,11 @@ StandardError=null
 [Install]
 WantedBy=multi-user.target
 EOF
-
     systemctl daemon-reload
     systemctl enable waterwall
     systemctl start waterwall
 }
 
-echo -e "${Purple}               
-══════════════════════════════════════════════════════════════════════════════════════
-        ____                             _     _                                     
-    ,   /    )                           /|   /                                  /   
--------/____/---_--_----__---)__--_/_---/-| -/-----__--_/_-----------__---)__---/-__-
-  /   /        / /  ) /   ) /   ) /    /  | /    /___) /   | /| /  /   ) /   ) /(    
-_/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/___\__
-
-══════════════════════════════════════════════════════════════════════════════════════${NC}"
-
-Black='\033[0;30m'        # Black
-Red='\033[0;31m'          # Red
-Green='\033[0;32m'        # Green
-Yellow='\033[0;33m'       # Yellow
-Blue='\033[0;34m'         # Blue
-Purple='\033[0;35m'       # Purple
-Cyan='\033[0;36m'         # Cyan
-NC='\033[0m'              # NC
-White='\033[0;96m'        # White
- 
 while true; do
     echo -e "${Purple}Select an option:${NC}"
     echo -e "${White}1. IRAN ${NC}"
@@ -53,8 +120,6 @@ while true; do
 
     read -p "Enter your choice: " choice
     if [[ "$choice" -eq 1 || "$choice" -eq 2 ]]; then
-        apt update
-        sleep 0.5
         SSHD_CONFIG_FILE="/etc/ssh/sshd_config"
         CURRENT_PORT=$(grep -E '^(#Port |Port )' "$SSHD_CONFIG_FILE")
 
@@ -67,13 +132,40 @@ while true; do
         sleep 0.5
         mkdir /root/mux
         cd /root/mux
-        wget https://github.com/radkesvat/WaterWall/releases/download/v1.21/Waterwall-linux-64.zip
         apt install unzip -y
-        unzip Waterwall-linux-64.zip
-        sleep 0.5
-        chmod +x Waterwall
-        sleep 0.5
-        rm Waterwall-linux-64.zip
+        apt install jq -y
+
+        read -p "Do you want to install the latest version? (y/n): " answer
+        if [[ "$answer" == [Yy]* ]]; then
+            # Get the latest release URL
+            url=$(get_latest_release_url)
+
+            if [ $? -ne 0 ] || [ -z "$url" ]; then
+                echo "Failed to retrieve the latest release URL."
+                exit 1
+            fi
+            echo "Latest Release URL: $url"
+            download_and_unzip "$url" "$ASSET_NAME"
+            if [ $? -ne 0 ]; then
+                echo "Failed to download or unzip the file."
+                exit 1
+            fi
+        elif [[ "$answer" == [Nn]* ]]; then
+            read -p "Enter the version you want to install (e.g., v1.18): " version
+            # Get the specific release URL
+            url=$(get_specific_release_url "$version")
+
+            if [ $? -ne 0 ] || [ -z "$url" ]; then
+                echo "Failed to retrieve the latest release URL."
+                exit 1
+            fi
+            echo "Specific Version URL: $url"
+            download_and_unzip "$url" "$ASSET_NAME"
+        else
+            echo "Please answer yes (y) or no (n)."
+            break
+        fi
+
         cat > core.json << EOF
 {
     "log": {
@@ -105,15 +197,14 @@ while true; do
     ]
 }
 EOF
-        public_ip=$(wget -qO- https://api.ipify.org)
-        echo "Your Server IPv4 is: $public_ip"
     fi
 
     if [ "$choice" -eq 1 ]; then
-        echo -e "${Cyan}You chose Iran.${NC}"
+        public_ip=$(wget -qO- https://api.ipify.org)
+        echo "Iran IPv4 is: $public_ip"
         read -p "enter Kharej Ipv4: " ip_remote
-        read -p "Enter the SNI (default: ipmart.shop): " input_sni
-        HOSTNAME=${input_sni:-ipmart.shop}
+        read -p "Enter the SNI (default: sahab.ir): " input_sni
+        HOSTNAME=${input_sni:-sahab.ir}
         cat > config.json << EOF
 {
     "name": "reverse_reality_grpc_hd_multiport_server",
@@ -179,7 +270,7 @@ EOF
             "type": "RealityServer",
             "settings": {
                 "destination": "reality_dest",
-                "password": "2249AHS13"
+                "password": "passwd"
             },
             "next": "halfs"
         },
@@ -211,15 +302,17 @@ EOF
         sleep 0.5
         setup_waterwall_service
         sleep 0.5
-        echo -e "${Cyan}Iran IPv4 is: $public_ip${NC}"
-        echo -e "${Purple}Kharej IPv4 is: $ip_remote${NC}"
-        echo -e "${Cyan}SNI $HOSTNAME${NC}"
-        echo -e "${Purple}Iran Setup Successfully Created ${NC}"
+        echo "Iran IPv4 is: $public_ip"
+        echo "Kharej IPv4 is: $ip_remote"
+        echo "SNI $HOSTNAME"
+        echo "Iran Setup Successfully Created "
+        read -p "Press Enter to continue"
     elif [ "$choice" -eq 2 ]; then
-        echo -e "${Purple}You chose Kharej.${NC}"
+        public_ip=$(wget -qO- https://api.ipify.org)
+        echo "Kharej IPv4 is: $public_ip"
         read -p "enter Iran Ip: " ip_remote
-        read -p "Enter the SNI (default: ipmart.shop): " input_sni
-        HOSTNAME=${input_sni:-ipamart.shop}
+        read -p "Enter the SNI (default: sahab.ir): " input_sni
+        HOSTNAME=${input_sni:-sahab.ir}
         cat > config.json << EOF
 {
     "name": "reverse_reality_grpc_client_hd_multiport_client",
@@ -294,7 +387,7 @@ EOF
             "type": "RealityClient",
             "settings": {
                 "sni": "$HOSTNAME",
-                "password": "2249AHS13"
+                "password": "passwd"
             },
             "next": "outbound_to_iran"
         },
@@ -313,22 +406,33 @@ EOF
         sleep 0.5
         setup_waterwall_service
         sleep 0.5
-        echo -e "${Purple}Kharej IPv4 is: $public_ip${NC}"
-        echo -e "${Cyan}Iran IPv4 is: $ip_remote${NC}"
-        echo -e "${Purple}SNI $HOSTNAME${NC}"
-        echo -e "${Cyan}Kharej Setup Successfully Created ${NC}"
+        echo "Kharej IPv4 is: $public_ip"
+        echo "Iran IPv4 is: $ip_remote"
+        echo "SNI $HOSTNAME"
+        echo "Kharej Setup Successfully Created "
+        read -p "Press Enter to continue"
     elif [ "$choice" -eq 3 ]; then
         sudo systemctl stop waterwall
         sudo systemctl disable waterwall
         rm -rf /etc/systemd/system/waterwall.service
         pkill -f Waterwall
-        rm -rf /root/RRT
-
+        rm -rf /root/mux
         echo "Removed"
-    elif [ "$choice" -eq 0 ]; then
-        echo "Exit..."
+        read -p "Press Enter to continue"
+    elif [ "$choice" -eq 9 ]; then
+        echo "Going back..."
         break
     else
         echo "Invalid choice. Please try again."
     fi
+    # Color codes
+    Black='\033[0;30m'        # Black
+    Red='\033[0;31m'          # Red
+    Green='\033[0;32m'        # Green
+    Yellow='\033[0;33m'       # Yellow
+    Blue='\033[0;34m'         # Blue
+    Purple='\033[0;35m'       # Purple
+    Cyan='\033[0;36m'         # Cyan
+    NC='\033[0m'              # NC
+    White='\033[0;96m'        # White
 done
