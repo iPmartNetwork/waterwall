@@ -418,10 +418,10 @@ EOF
         sleep 0.5
         setup_waterwall_service
         sleep 0.5
-        echo "Kharej IPv4 is: $public_ip"
-        echo "Iran IPv4 is: $ip_remote"
-        echo "SNI $HOSTNAME"
-        echo "Kharej Setup Successfully Created "
+        echo -e "${Purple}Kharej IPv4 is: $public_ip${NC}"
+        echo -e "${Cyan}Iran IPv4 is: $ip_remote${NC}"
+        echo -e "${Purple}SNI $HOSTNAME${NC}"
+        echo -e "${Cyan}Kharej Setup Successfully Created ${NC}"
         read -p "Press Enter to continue"
     elif [ "$choice" -eq 3 ]; then
         sudo systemctl stop waterwall
