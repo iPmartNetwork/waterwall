@@ -9,9 +9,8 @@
 _/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/___\__
 
 ══════════════════════════════════════════════════════════════════════════════════════
-
-    echo -e "
-
+"
+# Coler Code
 Purple='\033[0;35m'
 Cyan='\033[0;36m'
 cyan='\033[0;36m'
@@ -21,7 +20,7 @@ White='\033[0;96m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
 MAGENTA='\033[0;35m'
-NC='\033[0m' # No Color 
+NC='\033[0m' # No Color
 
 # Determine the architecture and set the ASSET_NAME accordingly
 ARCH=$(uname -m)
