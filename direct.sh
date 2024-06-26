@@ -65,9 +65,9 @@ while true; do
             sudo service ssh restart
         fi
         sleep 0.5
-        mkdir /root/RRT
-        cd /root/RRT
-        wget https://github.com/radkesvat/WaterWall/releases/download/v1.18/Waterwall-linux-64.zip
+        mkdir /root/RDT
+        cd /root/RDT
+        wget https://github.com/radkesvat/WaterWall/releases/download/v1.21/Waterwall-linux-64.zip
         apt install unzip -y
         unzip Waterwall-linux-64.zip
         sleep 0.5
@@ -182,7 +182,7 @@ EOF
             "type": "TcpListener",
             "settings": {
                 "address": "0.0.0.0",
-                "port": 443,
+                "port": [443,65535],
                 "nodelay": true
             },
             "next": "my_reality_server"
@@ -213,7 +213,7 @@ EOF
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address":"127.0.0.1",
+                "address":"$ip_remote",
                 "port":"dest_context->port"
 
             }
@@ -246,7 +246,7 @@ EOF
         sudo systemctl disable waterwall
         rm -rf /etc/systemd/system/waterwall.service
         pkill -f Waterwall
-        rm -rf /root/RRT
+        rm -rf /root/RDT
 
         echo "Removed"
     elif [ "$choice" -eq 0 ]; then
