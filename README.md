@@ -32,6 +32,13 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/direct.s
 
 ```
 
+### mux (http2 , mux , grpc)
+
+
+```
+bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/mux.sh)
+
+```
 
 
 ---
