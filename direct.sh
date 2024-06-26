@@ -140,8 +140,8 @@ EOF
             "name": "my_reality_client",
             "type": "RealityClient",
             "settings": {
-                "sni":"iPmart.shop",
-                "password":"02249AHS22"
+                "sni":"ipmart.shop",
+                "password":"22AHS224900"
 
             },
             "next": "outbound_to_kharej"
@@ -182,7 +182,7 @@ EOF
             "type": "TcpListener",
             "settings": {
                 "address": "0.0.0.0",
-                "port": [443,65535],
+                "port": 443,
                 "nodelay": true
             },
             "next": "my_reality_server"
@@ -193,7 +193,7 @@ EOF
             "type": "RealityServer",
             "settings": {
                 "destination":"reality_dest_node",
-                "password":"02249AHS22"
+                "password":"22AHS224900"
 
             },
             "next": "header_server"
@@ -213,7 +213,7 @@ EOF
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address":"$ip_remote",
+                "address":"127.0.0.1",
                 "port":"dest_context->port"
 
             }
@@ -224,13 +224,14 @@ EOF
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address":"ipmart.shop",
+                "address":"iPmart.shop",
                 "port":443
             }
         }
       
     ]
 }
+
 
 
 EOF
