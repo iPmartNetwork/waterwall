@@ -34,10 +34,10 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/direct.s
 
 
 
-```
+---
 
 [لینک اصلی پروژه](https://github.com/radkesvat/WaterWall)
-```
+---
 
 
 # تلگرام
