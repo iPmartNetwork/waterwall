@@ -17,10 +17,10 @@
 
 - اسکریپت روی هر دو سرور اجرا شود (خارج و ایران )
 
-### Reverse
+### Reverse (Reality Reverse Tunnel)
 
 ```
-bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/install.sh)
+bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/reverse.sh)
 
 ```
 
