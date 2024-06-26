@@ -116,65 +116,6 @@ EOF
         HOSTNAME=${input_sni:-ipmart.shop}
         cat > config.json << EOF
 {
-    "name": "reality_client_multiport",
-    "nodes": [
-        {
-            "name": "users_inbound",
-            "type": "TcpListener",
-            "settings": {
-                "address": "0.0.0.0",
-                "port": [443,65535],
-                "nodelay": true
-            },
-            "next": "header"
-        },
-        {
-            "name": "header",
-            "type": "HeaderClient",
-            "settings": {
-                "data": "src_context->port"
-            },
-            "next": "my_reality_client"
-        },
-        {
-            "name": "my_reality_client",
-            "type": "RealityClient",
-            "settings": {
-                "sni":"ipmart.shop",
-                "password":"22AHS224900"
-
-            },
-            "next": "outbound_to_kharej"
-        },
-
-        {
-            "name": "outbound_to_kharej",
-            "type": "TcpConnector",
-            "settings": {
-                "nodelay": true,
-                "address":"$ip_remote",
-                "port":443
-            }
-        }
-     
-      
-    ]
-}
-EOF
-        sleep 0.5
-        setup_waterwall_service
-        sleep 0.5
-        echo -e "${Cyan}Iran IPv4 is: $public_ip${NC}"
-        echo -e "${Purple}Kharej IPv4 is: $ip_remote${NC}"
-        echo -e "${Cyan}SNI $HOSTNAME${NC}"
-        echo -e "${Purple}Iran Setup Successfully Created ${NC}"
-    elif [ "$choice" -eq 2 ]; then
-        echo -e "${Purple}You chose Kharej.${NC}"
-        read -p "enter Iran Ip: " ip_remote
-        read -p "Enter the SNI (default: ipmart.shop): " input_sni
-        HOSTNAME=${input_sni:-ipamart.shop}
-        cat > config.json << EOF
-{
     "name": "reality_server_multiport",
     "nodes": [
         {
@@ -224,10 +165,70 @@ EOF
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address":"iPmart.shop",
+                "address":"ipmart.shop",
                 "port":443
             }
         }
+      
+    ]
+}
+
+EOF
+        sleep 0.5
+        setup_waterwall_service
+        sleep 0.5
+        echo -e "${Cyan}Iran IPv4 is: $public_ip${NC}"
+        echo -e "${Purple}Kharej IPv4 is: $ip_remote${NC}"
+        echo -e "${Cyan}SNI $HOSTNAME${NC}"
+        echo -e "${Purple}Iran Setup Successfully Created ${NC}"
+    elif [ "$choice" -eq 2 ]; then
+        echo -e "${Purple}You chose Kharej.${NC}"
+        read -p "enter Iran Ip: " ip_remote
+        read -p "Enter the SNI (default: ipmart.shop): " input_sni
+        HOSTNAME=${input_sni:-ipamart.shop}
+        cat > config.json << EOF
+{
+    "name": "reality_client_multiport",
+    "nodes": [
+        {
+            "name": "users_inbound",
+            "type": "TcpListener",
+            "settings": {
+                "address": "0.0.0.0",
+                "port": [443,65535],
+                "nodelay": true
+            },
+            "next": "header"
+        },
+        {
+            "name": "header",
+            "type": "HeaderClient",
+            "settings": {
+                "data": "src_context->port"
+            },
+            "next": "my_reality_client"
+        },
+        {
+            "name": "my_reality_client",
+            "type": "RealityClient",
+            "settings": {
+                "sni":"i.stack.imgur.com",
+                "password":"22AHS224900"
+
+            },
+            "next": "outbound_to_kharej"
+        },
+
+        {
+            "name": "outbound_to_kharej",
+            "type": "TcpConnector",
+            "settings": {
+                "nodelay": true,
+                "address":"$ip_remote",
+                "port":443
+            }
+        }
+     
       
     ]
 }
