@@ -152,7 +152,7 @@ EOF
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address":"$HOSTNAME",
+                "address":"$ip_remote",
                 "port":443
             }
         }
