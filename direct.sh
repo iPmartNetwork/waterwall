@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "${Purple}               
+echo  "             
 ══════════════════════════════════════════════════════════════════════════════════════
         ____                             _     _                                     
     ,   /    )                           /|   /                                  /   
@@ -88,8 +88,8 @@ while true; do
         exit 1
     fi
         sleep 0.5
-        mkdir /root/RDT
-        cd /root/RDT
+        mkdir /root/RRT
+        cd /root/RRT
         wget https://github.com/radkesvat/WaterWall/releases/download/v1.21/Waterwall-linux-64.zip
         apt install unzip -y
         unzip Waterwall-linux-64.zip
@@ -99,7 +99,7 @@ while true; do
         rm Waterwall-linux-64.zip
         cat > core.json << EOF
 {
-    "log": {
+   "log": {
         "path": "log/",
         "core": {
             "loglevel": "DEBUG",
@@ -164,7 +164,7 @@ EOF
             "type": "RealityClient",
             "settings": {
                 "sni":"$HOSTNAME",
-                "password":"2249002AHS"
+                "password":"2249AHS00"
             },
             "next": "outbound_to_kharej"
         },
@@ -212,7 +212,7 @@ EOF
             "type": "RealityServer",
             "settings": {
                 "destination":"reality_dest_node",
-                "password":"2249002AHS"
+                "password":"2249AHS00"
             },
             "next": "header_server"
         },
@@ -257,7 +257,7 @@ EOF
         sudo systemctl disable waterwall
         rm -rf /etc/systemd/system/waterwall.service
         pkill -f Waterwall
-        rm -rf /root/RDT
+        rm -rf /root/RRT
 
         echo "Removed"
     elif [ "$choice" -eq 0 ]; then
