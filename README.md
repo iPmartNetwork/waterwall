@@ -24,7 +24,7 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/reverse.
 
 ```
 
-### Direct
+### Direct (Reality Direct Tunnel)
 
 
 ```
