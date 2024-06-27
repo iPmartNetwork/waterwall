@@ -41,6 +41,19 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/mux.sh)
 ```
 
 
+### HalfDuplex Tunnel or Direct
+
+
+```
+bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/mux.sh)
+
+```
+
+
+
+
+
+
 ---
 
 [لینک اصلی پروژه](https://github.com/radkesvat/WaterWall)
