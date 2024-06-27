@@ -47,6 +47,17 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/mux.sh)
 ---
 
 
+
+
+
+
+
+
+
+
+
+
+
 # تلگرام
 
 [@ipmart_network](https://t.me/ipmart_network)
