@@ -17,6 +17,16 @@
 
 - اسکریپت روی هر دو سرور اجرا شود (خارج و ایران )
 
+### HalfDuplex Tunnel or Direct
+
+
+```
+bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/halfduplex.sh)
+
+```
+
+
+
 ### Reverse (Reality Reverse Tunnel)
 
 ```
