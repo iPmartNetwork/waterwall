@@ -219,7 +219,7 @@ EOF
         HOSTNAME=${input_sni:-ipmart.shop}
         cat > config.json << EOF
 {
-    "name": "config_reverse_tls_grpc_multiport_iran",
+    "name": "config_reverse_tls_grpc_multiport_hd_iran",
     "nodes": [
         {
             "name": "inbound_users",
@@ -260,10 +260,16 @@ EOF
             "next": "bridge1"
         },
         {
+            "name": "halfs",
+            "type": "HalfDuplexServer",
+            "settings": {},
+            "next": "reverse_server"
+        },
+        {
             "name": "grpc_server",
             "type": "ProtoBufServer",
             "settings": {},
-            "next": "reverse_server"
+            "next": "halfs"
         },
         {
             "name": "h2server",
@@ -345,7 +351,7 @@ EOF
         HOSTNAME=${input_sni:-ipamart.shop}
         cat > config.json << EOF
 {
-    "name": "config_reverse_tls_grpc_multiport_kharej",
+    "name": "config_reverse_tls_grpc_multiport_hd_kharej",
     "nodes": [
         {
             "name": "core_outbound",
@@ -353,7 +359,7 @@ EOF
             "settings": {
                 "nodelay": true,
                 "address": "127.0.0.1",
-                "port": "dest_context->port"
+                "port": 443
             }
         },
         {
@@ -385,6 +391,12 @@ EOF
             "type": "ReverseClient",
             "settings": {
             },
+            "next": "halfc"
+        },
+        {
+            "name": "halfc",
+            "type": "HalfDuplexClient",
+            "settings": {},
             "next": "grpc_client"
         },
         {
@@ -397,7 +409,7 @@ EOF
             "name": "h2client",
             "type": "Http2Client",
             "settings": {
-                "host": "$HOSTNAME",
+                "host": "sub.mydomain.com",
                 "port": 443,
                 "path": "/service",
                 "content-type": "application/grpc"
@@ -408,7 +420,7 @@ EOF
             "name": "sslclient",
             "type": "OpenSSLClient",
             "settings": {
-                "sni": "$HOSTNAME",
+                "sni": "sub.mydomain.com",
                 "verify": true,
                 "alpn": "h2"
             },
@@ -419,7 +431,7 @@ EOF
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address": "$HOSTNAME",
+                "address": "sub.mydomain.com",
                 "port": 443
             }
         }
