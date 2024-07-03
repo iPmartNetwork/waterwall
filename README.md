@@ -60,7 +60,13 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/halfdupl
 ```
 
 
+### mux , half , reverse , cdn
 
+
+```
+bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/iPmart.sh)
+
+```
 
 
 
