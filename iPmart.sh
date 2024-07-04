@@ -12,7 +12,6 @@ BLUE='\033[0;34m'
 MAGENTA='\033[0;35m'
 NC='\033[0m' # No Color 
 
-
 cur_dir=$(pwd)
 # check root
 #[[ $EUID -ne 0 ]] && echo -e "${Purple}Fatal error: ${plain} Please run this script with root privilege \n " && exit 1
@@ -73,14 +72,14 @@ EOF
     echo -e "${cyan}Server Country:${NC} $SERVER_COUNTRY"
     echo -e "${cyan}Server IP:${NC} $SERVER_IP"
     echo -e "${cyan}Server ISP:${NC} $SERVER_ISP"
-    echo "+---------------------------------------------------------------+"
-    echo -e "${YELLOW}Please choose an option:${NC}"
-    echo "+---------------------------------------------------------------+"
-    echo -e "${cyan}| 1  - INSTALL CORE"
-    echo -e "${White}| 2  - Config Tunnel "
-    echo -e "${cyan}| 3  - Unistall"
-    echo -e "${White}| 0  - Exit"
-    echo "+---------------------------------------------------------------+"
+    echo "═════════════════════════════════════════════════════════════════"
+    echo -e "${GREEN}Please choose an option:${NC}"
+    echo "═════════════════════════════════════════════════════════════════"
+    echo -e "${cyan}| 1.   INSTALL CORE"
+    echo -e "${White}| 2.   Config Tunnel "
+    echo -e "${cyan}| 3.   Unistall"
+    echo -e "${White}| 0.   Exit"
+    echo "═════════════════════════════════════════════════════════════════"
     echo -e "\033[0m"
 
     read -p "Enter option number: " choice
@@ -161,7 +160,7 @@ config_tunnel(){
         echo -e "${cyan}Server IP:${NC} $SERVER_IP"
         echo -e "${cyan}Server ISP:${NC} $SERVER_ISP"
         echo "+---------------------------------------------------------------+"
-        echo -e "${YELLOW}Please choose an option:${NC}"
+        echo -e "${GREEN}Please choose an option:${NC}"
         echo "+---------------------------------------------------------------+"
         echo -e "${cyan}| 1  - IRAN"
         echo -e "${Purple}| 2  - Kharej"
@@ -178,14 +177,14 @@ config_tunnel(){
 
 cat <<EOL > iran.json
 {
-    "name": "reverse_reality_grpc_hd_multiport_server",
+    "name": "reverse_reality_server_multiport",
     "nodes": [
         {
             "name": "users_inbound",
             "type": "TcpListener",
             "settings": {
                 "address": "0.0.0.0",
-                "port": [23,65535],
+                "port": [443,65535],
                 "nodelay": true
             },
             "next": "header"
@@ -219,31 +218,13 @@ cat <<EOL > iran.json
             "next": "bridge1"
         },
         {
-            "name": "pbserver",
-            "type": "ProtoBufServer",
-            "settings": {},
-            "next": "reverse_server"
-        },
-        {
-            "name": "h2server",
-            "type": "Http2Server",
-            "settings": {},
-            "next": "pbserver"
-        },
-        {
-            "name": "halfs",
-            "type": "HalfDuplexServer",
-            "settings": {},
-            "next": "h2server"
-        },
-        {
             "name": "reality_server",
             "type": "RealityServer",
             "settings": {
                 "destination": "reality_dest",
-                "password": "220049AHS04"
+                "password": "2249002AHS"
             },
-            "next": "halfs"
+            "next": "reverse_server"
         },
         {
             "name": "kharej_inbound",
@@ -253,7 +234,7 @@ cat <<EOL > iran.json
                 "port": 443,
                 "nodelay": true,
                 "whitelist": [
-                    "$kharej_ip/32"
+                    "$ip_remote/32"
                 ]
             },
             "next": "reality_server"
@@ -263,7 +244,7 @@ cat <<EOL > iran.json
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address": "$clear_sni",
+                "address": "$HOSTNAME",
                 "port": 443
             }
         }
@@ -286,7 +267,7 @@ EOL
 
 cat <<EOL > iran.json
 {
-    "name": "reverse_reality_grpc_client_hd_multiport_client",
+    "name": "reverse_reality_client_multiport",
     "nodes": [
         {
             "name": "outbound_to_core",
@@ -327,38 +308,14 @@ cat <<EOL > iran.json
             "settings": {
                 "minimum-unused": 16
             },
-            "next": "pbclient"
-        },
-        {
-            "name": "pbclient",
-            "type": "ProtoBufClient",
-            "settings": {},
-            "next": "h2client"
-        },
-        {
-            "name": "h2client",
-            "type": "Http2Client",
-            "settings": {
-                "host": "$clear_sni",
-                "port": 443,
-                "path": "/",
-                "content-type": "application/grpc",
-                "concurrency": 64
-            },
-            "next": "halfc"
-        },
-        {
-            "name": "halfc",
-            "type": "HalfDuplexClient",
             "next": "reality_client"
         },
-        
         {
             "name": "reality_client",
             "type": "RealityClient",
             "settings": {
-                "sni": "$clear_sni",
-                "password": "220049AHS04"
+                "sni": "$HOSTNAME",
+                "password": "2249002AHS"
             },
             "next": "outbound_to_iran"
         },
@@ -367,7 +324,7 @@ cat <<EOL > iran.json
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address": "$iran_ip",
+                "address": "$ip_remote",
                 "port": 443
             }
         }
@@ -382,7 +339,7 @@ EOL
 
             ;;
         0)
-            echo -e "${YELLOW}Exiting program...${NC}"
+            echo -e "${GREEN}Exiting program...${NC}"
             exit 0
             ;;
         *)
@@ -449,6 +406,33 @@ screen -dmS WaterWal /root/Waterwall
 
 echo "WaterWall has been started in a new screen session."
 
+}
+
+
+check_core_status() {
+    local file_path="core.json"
+    local status
+
+    if [ -f "$file_path" ]; then
+        status="${cyan}Installed"${NC}
+    else
+        status=${Purple}"Not installed"${NC}
+    fi
+
+    echo "$status"
+}
+
+check_tunnel_status() {
+    local file_path="iran.json"
+    local status
+
+    if [ -f "$file_path" ]; then
+        status="${cyan}Enabled"${NC}
+    else
+        status=${Purple}"Disabled"${NC}
+    fi
+
+    echo "$status"
 }
 
 loader
