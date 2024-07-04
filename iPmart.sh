@@ -46,6 +46,10 @@ loader(){
     # Fetch server isp using ip-api.com 
     SERVER_ISP=$(curl -sS "http://ip-api.com/json/$SERVER_IP" | jq -r '.isp')
 
+
+    WATER_CORE=$(check_core_status)
+    WATER_TUNNEL=$(check_tunnel_status)
+    
     init
 
 }
@@ -68,16 +72,18 @@ _/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/_
 ══════════════════════════════════════════════════════════════════════════════════════
 EOF
     echo -e "${NC}"
-                                                                                                       
+
+    echo "═════════════════════════════════════════════════════════════════"                                                                                                   
     echo -e "${cyan}Server Country:${NC} $SERVER_COUNTRY"
     echo -e "${cyan}Server IP:${NC} $SERVER_IP"
     echo -e "${cyan}Server ISP:${NC} $SERVER_ISP"
     echo "═════════════════════════════════════════════════════════════════"
-    echo -e "|${White}WaterWall CORE    |${NC} $WATER_CORE"
-    echo -e "|${White}WaterWall Tunnel  |${NC} $WATER_TUNNEL"
+    
+    echo -e "${White}WaterWall CORE    ${NC} $WATER_CORE"
+    echo -e "${White}WaterWall Tunnel  ${NC} $WATER_TUNNEL"
+
     echo "═════════════════════════════════════════════════════════════════"
-    echo "═════════════════════════════════════════════════════════════════"
-    echo -e "${GREEN}Please choose an option:${NC}"
+    echo -e "${YELLOW}Please choose an option:${NC}"
     echo "═════════════════════════════════════════════════════════════════"
     echo -e "${cyan}| 1.   INSTALL CORE"
     echo -e "${White}| 2.   Config Tunnel "
@@ -160,16 +166,24 @@ EOL
 config_tunnel(){
 
         clear                                                                                                        
-        echo -e "${cyan}Server Country:${NC} $SERVER_COUNTRY"
-        echo -e "${cyan}Server IP:${NC} $SERVER_IP"
-        echo -e "${cyan}Server ISP:${NC} $SERVER_ISP"
-        echo "+---------------------------------------------------------------+"
-        echo -e "${GREEN}Please choose an option:${NC}"
-        echo "+---------------------------------------------------------------+"
-        echo -e "${cyan}| 1  - IRAN"
-        echo -e "${Purple}| 2  - Kharej"
-        echo -e "${cyan}| 0  - Exit"
-        echo "+---------------------------------------------------------------+"
+    echo "═════════════════════════════════════════════════════════════════"                                                                                                   
+    echo -e "${cyan}Server Country:${NC} $SERVER_COUNTRY"
+    echo -e "${cyan}Server IP:${NC} $SERVER_IP"
+    echo -e "${cyan}Server ISP:${NC} $SERVER_ISP"
+    echo "═════════════════════════════════════════════════════════════════"
+    
+    echo -e "${White}WaterWall CORE    ${NC} $WATER_CORE"
+    echo -e "${White}WaterWall Tunnel  ${NC} $WATER_TUNNEL"
+
+    echo "═════════════════════════════════════════════════════════════════"
+    echo -e "${YELLOW}Please choose an option:${NC}"
+    echo "═════════════════════════════════════════════════════════════════"
+    echo -e "${cyan}| 1.   INSTALL CORE"
+    echo -e "${White}| 2.   Config Tunnel "
+    echo -e "${cyan}| 3.   Unistall"
+    echo -e "${White}| 0.   Exit"
+    echo "═════════════════════════════════════════════════════════════════"
+    echo -e "\033[0m"
         echo -e "\033[0m"
 
         read -p "Enter option number: " setup
