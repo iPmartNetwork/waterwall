@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Color codes
+# Coler Code
 Purple='\033[0;35m'
 Cyan='\033[0;36m'
 cyan='\033[0;36m'
@@ -10,12 +10,12 @@ White='\033[0;96m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
 MAGENTA='\033[0;35m'
-NC='\033[0m' # No Color 
+NC='\033[0m' # No Color
 
 
 cur_dir=$(pwd)
 # check root
-#[[ $EUID -ne 0 ]] && echo -e "${Purple}Fatal error: ${plain} Please run this script with root privilege \n " && exit 1
+[[ $EUID -ne 0 ]] && echo -e "${Purple}Fatal error: ${plain} Please run this script with root privilege \n " && exit 1
 
 install_jq() {
     if ! command -v jq &> /dev/null; then
@@ -47,6 +47,9 @@ loader(){
     # Fetch server isp using ip-api.com 
     SERVER_ISP=$(curl -sS "http://ip-api.com/json/$SERVER_IP" | jq -r '.isp')
 
+    WATER_CORE=$(check_core_status)
+    WATER_TUNNEL=$(check_tunnel_status)
+
     init
 
 }
@@ -55,7 +58,7 @@ init(){
 
     #clear page .
     clear
-    # Function to display ASCII logo
+        # Function to display ASCII logo
     echo -e "${Purple}"
     cat << "EOF"
 
@@ -69,18 +72,20 @@ _/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/_
 ══════════════════════════════════════════════════════════════════════════════════════
 EOF
     echo -e "${NC}"
-                                                                                                       
-    echo -e "${cyan}Server Country:${NC} $SERVER_COUNTRY"
-    echo -e "${cyan}Server IP:${NC} $SERVER_IP"
-    echo -e "${cyan}Server ISP:${NC} $SERVER_ISP"
-    echo "+---------------------------------------------------------------+"
-    echo -e "${YELLOW}Please choose an option:${NC}"
-    echo "+---------------------------------------------------------------+"
-    echo -e "${cyan}| 1  - INSTALL CORE"
-    echo -e "${White}| 2  - Config Tunnel "
-    echo -e "${cyan}| 3  - Unistall"
-    echo -e "${White}| 0  - Exit"
-    echo "+---------------------------------------------------------------+"
+    echo "══════════════════════════════════════════════════════════════════════════════════════"                                                                                                         
+    echo -e "${cyan}Server Country    ${NC} $SERVER_COUNTRY"
+    echo -e "${cyan}Server IP         ${NC} $SERVER_IP"
+    echo -e "${cyan}Server ISP        ${NC} $SERVER_ISP"
+    echo -e "${cyan}WaterWall CORE    ${NC} $WATER_CORE"
+    echo -e "${cyan}WaterWall Tunnel  ${NC} $WATER_TUNNEL"
+    echo "══════════════════════════════════════════════════════════════════════════════════════"
+    echo -e "|${YELLOW}Please choose an option:${NC}"
+    echo "══════════════════════════════════════════════════════════════════════════════════════"
+    echo -e "${cyan} 1  - INSTALL CORE ${NC}"
+    echo -e "${White} 2  - Config Tunnel ${NC}"
+    echo -e "${cyan} 3  - Unistall ${NC}"
+    echo -e "${White} 0  - Exit ${NC}"
+    echo "══════════════════════════════════════════════════════════════════════════════════════"
     echo -e "\033[0m"
 
     read -p "Enter option number: " choice
@@ -106,84 +111,12 @@ EOF
 
 }
 
-# Determine the architecture and set the ASSET_NAME accordingly
-ARCH=$(uname -m)
-if [ "$ARCH" == "aarch64" ]; then
-  ASSET_NAME="Waterwall-linux-arm64.zip"
-elif [ "$ARCH" == "x86_64" ]; then
-  ASSET_NAME="Waterwall-linux-64.zip"
-else
-  echo "Unsupported architecture: $ARCH"
-  exit 1
-fi
+install_core(){
 
-# Function to download and unzip the release
-download_and_unzip() {
-  local url="$1"
-  local dest="$2"
-
-  echo "Downloading $dest from $url..."
-  wget -q -O "$dest" "$url"
-  if [ $? -ne 0 ]; then
-    echo "Error: Unable to download file."
-    return 1
-  fi
-
-  echo "Unzipping $dest..."
-  unzip -o "$dest"
-  if [ $? -ne 0 ]; then
-    echo "Error: Unable to unzip file."
-    return 1
-  fi
-  
-  sleep 0.5
-  chmod +x Waterwall
-  rm "$dest"
-
-  echo "Download and unzip completed successfully."
-}
-
-# Function to get download URL for the latest release
-get_latest_release_url() {
-  local api_url="https://api.github.com/repos/radkesvat/WaterWall/releases/latest"
-
-  echo "Fetching latest release data..." >&2
-  local response=$(curl -s "$api_url")
-  if [ $? -ne 0 ]; then
-    echo "Error: Unable to fetch release data." >&2
-    return 1
-  fi
-
-  local asset_url=$(echo "$response" | jq -r ".assets[] | select(.name == \"$ASSET_NAME\") | .browser_download_url")
-  if [ -z "$asset_url" ]; then
-    echo "Error: Asset not found." >&2
-    return 1
-  fi
-
-  echo "$asset_url"
-}
-
-# Function to get download URL for a specific release version
-get_specific_release_url() {
-  local version=$1
-  local api_url="https://api.github.com/repos/radkesvat/WaterWall/releases/tags/$version"
-
-  echo "Fetching release data for version $version..." >&2
-  response=$(curl -s $api_url)
-  if [ $? -ne 0 ]; then
-    echo "Error: Unable to fetch release data for version $version." >&2
-    exit 1
-  fi
-
-  local asset_url=$(echo $response | jq -r ".assets[] | select(.name == \"$ASSET_NAME\") | .browser_download_url")
-  if [ -z "$asset_url" ]; then
-    echo "Error: Asset not found for version $version." >&2
-    exit 1
-  fi
-
-  echo $asset_url
-}  
-  
+wget https://github.com/radkesvat/WaterWall/releases/download/v1.25/Waterwall-linux-64.zip
+apt install unzip && unzip Waterwall-linux-64.zip
+chmod +rwx Waterwall
+    
 cat <<EOL > core.json
     {
         "log": {
@@ -219,7 +152,7 @@ cat <<EOL > core.json
 EOL
 
     echo 'WaterWall Core installed :)'
-    echo $'\e[36mUninstalling WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
+    echo $'\e[32minstalling WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
         clear
         init
     }
@@ -228,17 +161,20 @@ EOL
 
 config_tunnel(){
 
-        clear                                                                                                        
-        echo -e "${cyan}Server Country:${NC} $SERVER_COUNTRY"
-        echo -e "${cyan}Server IP:${NC} $SERVER_IP"
-        echo -e "${cyan}Server ISP:${NC} $SERVER_ISP"
-        echo "+---------------------------------------------------------------+"
-        echo -e "${YELLOW}Please choose an option:${NC}"
-        echo "+---------------------------------------------------------------+"
-        echo -e "${cyan}| 1  - IRAN"
-        echo -e "${Purple}| 2  - Kharej"
-        echo -e "${cyan}| 0  - Exit"
-        echo "+---------------------------------------------------------------+"
+        clear 
+        echo "══════════════════════════════════════════════════════════════════════════════════════"                                                                                                         
+        echo -e "${cyan}Server Country    ${NC} $SERVER_COUNTRY"
+        echo -e "${cyan}Server IP         ${NC} $SERVER_IP"
+        echo -e "${cyan}Server ISP        ${NC} $SERVER_ISP"
+        echo -e "${cyan}WaterWall CORE    ${NC} $WATER_CORE"
+        echo -e "${cyan}WaterWall Tunnel  ${NC} $WATER_TUNNEL"
+        echo "══════════════════════════════════════════════════════════════════════════════════════"
+        echo -e "${cyan}Please choose an option:${NC}"
+        echo "══════════════════════════════════════════════════════════════════════════════════════"
+        echo -e "${cyan} 1  - IRAN"
+        echo -e "${Purple} 2  - Kharej"
+        echo -e "${White} 0  - Exit"
+        echo "══════════════════════════════════════════════════════════════════════════════════════+"
         echo -e "\033[0m"
 
         read -p "Enter option number: " setup
@@ -313,7 +249,7 @@ cat <<EOL > iran.json
             "type": "RealityServer",
             "settings": {
                 "destination": "reality_dest",
-                "password": "220049AHS04"
+                "password": "passwd"
             },
             "next": "halfs"
         },
@@ -342,12 +278,11 @@ cat <<EOL > iran.json
     ]
 }
 EOL
-            # nohup ./Waterwall &
-            # ./run_screen.py
             run_screen
-            echo "Tunnel is ready"
-            clear
-
+            echo $'\e[32mTunnel WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
+                clear
+                init
+            }
             ;;
         2)
 
@@ -430,7 +365,7 @@ cat <<EOL > iran.json
             "type": "RealityClient",
             "settings": {
                 "sni": "$clear_sni",
-                "password": "220049AHS04"
+                "password": "passwd"
             },
             "next": "outbound_to_iran"
         },
@@ -446,15 +381,16 @@ cat <<EOL > iran.json
     ]
 }
 EOL
-            # nohup ./Waterwall &
-            # ./run_screen.py
+
             run_screen
-            echo "Tunnel is ready"
-            clear
+            echo $'\e[32mTunnel WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
+                clear
+                init
+            }
 
             ;;
         0)
-            echo -e "${YELLOW}Exiting program...${NC}"
+            echo -e "${cyan}Exiting program...${NC}"
             exit 0
             ;;
         *)
@@ -516,11 +452,38 @@ fi
 
 # Run WaterWall in a new detached screen session
 # screen -d -m -S WaterWall /path/to/WaterWall
-# screen -S iran ./Waterwall
+# screen -S ipmart ./Waterwall
 screen -dmS WaterWal /root/Waterwall
 
 echo "WaterWall has been started in a new screen session."
 
+}
+
+
+check_core_status() {
+    local file_path="core.json"
+    local status
+
+    if [ -f "$file_path" ]; then
+        status="${cyan}Installed"${NC}
+    else
+        status=${Purple}"Not installed"${NC}
+    fi
+
+    echo "$status"
+}
+
+check_tunnel_status() {
+    local file_path="iran.json"
+    local status
+
+    if [ -f "$file_path" ]; then
+        status="${cyan}Enabled"${NC}
+    else
+        status=${Purple}"Disabled"${NC}
+    fi
+
+    echo "$status"
 }
 
 loader
