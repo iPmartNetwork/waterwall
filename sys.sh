@@ -100,7 +100,7 @@ EOF
         unistall
         ;;
     0)
-        echo -e "${cyan}Exiting program...${NC}"
+        echo -e "${cyan}Exit...${NC}"
         exit 0
         ;;
     *)
@@ -116,7 +116,30 @@ install_core(){
 wget https://github.com/radkesvat/WaterWall/releases/download/v1.25/Waterwall-linux-64.zip
 apt install unzip && unzip Waterwall-linux-64.zip
 chmod +rwx Waterwall
-    
+
+ setup_waterwall_service() {
+    cat > /etc/systemd/system/waterwall.service << EOF
+[Unit]
+Description=Waterwall Service
+After=network.target
+
+[Service]
+ExecStart=/root/RRT/Waterwall
+WorkingDirectory=/root/RRT
+Restart=always
+RestartSec=5
+User=root
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    systemctl enable waterwall
+    systemctl start waterwall
+} 
+
 cat <<EOL > core.json
     {
         "log": {
@@ -152,7 +175,7 @@ cat <<EOL > core.json
 EOL
 
     echo 'WaterWall Core installed :)'
-    echo $'\e[32minstalling WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
+    echo $'\e[33minstalling WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
         clear
         init
     }
@@ -279,7 +302,7 @@ cat <<EOL > iran.json
 }
 EOL
             run_screen
-            echo $'\e[32mTunnel WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
+            echo $'\e[33mTunnel WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
                 clear
                 init
             }
@@ -383,7 +406,7 @@ cat <<EOL > iran.json
 EOL
 
             run_screen
-            echo $'\e[32mTunnel WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
+            echo $'\e[33mTunnel WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
                 clear
                 init
             }
