@@ -124,8 +124,8 @@ Description=Waterwall Service
 After=network.target
 
 [Service]
-ExecStart=/root/RRT/Waterwall
-WorkingDirectory=/root/RRT
+ExecStart=/root/Waterwall
+WorkingDirectory=/root/
 Restart=always
 RestartSec=5
 User=root
@@ -175,7 +175,7 @@ cat <<EOL > core.json
 EOL
 
     echo 'WaterWall Core installed :)'
-    echo $'\e[33minstalling WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
+    echo $'\e[33minstalling WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[35m2... \e[0m' && sleep 1 && echo $'\e[35m1... \e[0m' && sleep 1 && {
         clear
         init
     }
@@ -302,7 +302,7 @@ cat <<EOL > iran.json
 }
 EOL
             run_screen
-            echo $'\e[33mTunnel WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
+            echo $'\e[33mTunnel WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[35m2... \e[0m' && sleep 1 && echo $'\e[35m1... \e[0m' && sleep 1 && {
                 clear
                 init
             }
@@ -406,7 +406,7 @@ cat <<EOL > iran.json
 EOL
 
             run_screen
-            echo $'\e[33mTunnel WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
+            echo $'\e[33mTunnel WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[35m2... \e[0m' && sleep 1 && echo $'\e[35m1... \e[0m' && sleep 1 && {
                 clear
                 init
             }
@@ -426,7 +426,7 @@ EOL
 
 unistall(){
 
-    echo $'\e[32mUninstalling WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
+    echo $'\e[32mUninstalling WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[35m2... \e[0m' && sleep 1 && echo $'\e[35m1... \e[0m' && sleep 1 && {
     rm Waterwall-linux-64.zip
     rm Waterwall-linux-64.zip*
     rm Waterwall
