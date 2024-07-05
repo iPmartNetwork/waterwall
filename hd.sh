@@ -283,7 +283,7 @@ EOF
             "type": "RealityServer",
             "settings": {
                 "destination": "reality_dest",
-                "password": "22AHS049H"
+                "password": "220049AHS04"
             },
             "next": "halfs"
         },
@@ -400,7 +400,7 @@ EOF
             "type": "RealityClient",
             "settings": {
                 "sni": "$HOSTNAME",
-                "password": "22AHS049H"
+                "password": "220049AHS04"
             },
             "next": "outbound_to_iran"
         },
@@ -409,7 +409,7 @@ EOF
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address": "$public_ip",
+                "address": "ip_remote",
                 "port": 443
             }
         }
