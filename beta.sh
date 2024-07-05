@@ -81,10 +81,10 @@ EOF
     echo "══════════════════════════════════════════════════════════════════════════════════════"
     echo -e "|${YELLOW}Please choose an option:${NC}"
     echo "══════════════════════════════════════════════════════════════════════════════════════"
-    echo -e "${cyan} 1  - INSTALL CORE ${NC}"
-    echo -e "${White} 2  - Config Tunnel ${NC}"
-    echo -e "${cyan} 3  - Unistall ${NC}"
-    echo -e "${White} 0  - Exit ${NC}"
+    echo -e "${cyan} 1.   INSTALL CORE ${NC}"
+    echo -e "${White} 2.   Config Tunnel ${NC}"
+    echo -e "${cyan} 3.   Unistall ${NC}"
+    echo -e "${White} 0.   Exit ${NC}"
     echo "══════════════════════════════════════════════════════════════════════════════════════"
     echo -e "\033[0m"
 
@@ -171,9 +171,9 @@ config_tunnel(){
         echo "══════════════════════════════════════════════════════════════════════════════════════"
         echo -e "${cyan}Please choose an option:${NC}"
         echo "══════════════════════════════════════════════════════════════════════════════════════"
-        echo -e "${cyan} 1  - IRAN"
-        echo -e "${Purple} 2  - Kharej"
-        echo -e "${White} 0  - Exit"
+        echo -e "${cyan} 1.   IRAN"
+        echo -e "${Purple} 2.   Kharej"
+        echo -e "${White} 0.   Exit"
         echo "══════════════════════════════════════════════════════════════════════════════════════+"
         echo -e "\033[0m"
 
@@ -452,7 +452,7 @@ fi
 
 # Run WaterWall in a new detached screen session
 # screen -d -m -S WaterWall /path/to/WaterWall
-# screen -S ipmart ./Waterwall
+# screen -S iran ./Waterwall
 screen -dmS WaterWal /root/Waterwall
 
 echo "WaterWall has been started in a new screen session."
