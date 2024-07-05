@@ -77,18 +77,18 @@ init(){
 _/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/___\__
 
 ══════════════════════════════════════════════════════════════════════════════════════"                                                                                                        
-    echo -e "|${GREEN}Server Country    |${NC} $SERVER_COUNTRY"
-    echo -e "|${GREEN}Server IP         |${NC} $SERVER_IP"
-    echo -e "|${GREEN}Server ISP        |${NC} $SERVER_ISP"
-    echo -e "|${GREEN}WaterWall CORE    |${NC} $WATER_CORE"
-    echo -e "|${GREEN}WaterWall Tunnel  |${NC} $WATER_TUNNEL"
+    echo -e "|${cyan}Server Country    |${NC} $SERVER_COUNTRY"
+    echo -e "|${White}Server IP         |${NC} $SERVER_IP"
+    echo -e "|${cyan}Server ISP        |${NC} $SERVER_ISP"
+    echo -e "|${White}WaterWall CORE    |${NC} $WATER_CORE"
+    echo -e "|${cyan}WaterWall Tunnel  |${NC} $WATER_TUNNEL"
     echo "══════════════════════════════════════════════════════════════════════════════════════"
-    echo -e "|${YELLOW}Please choose an option:${NC}"
+    echo -e "|${Purple}Please choose an option:${NC}"
     echo "══════════════════════════════════════════════════════════════════════════════════════"
-    echo -e "${YELLOW}| 1  - INSTALL CORE ${NC}"
-    echo -e "${YELLOW}| 2  - Config Tunnel ${NC}"
-    echo -e "${YELLOW}| 3  - Unistall ${NC}"
-    echo -e "${YELLOW}| 0  - Exit ${NC}"
+    echo -e "${cyan}| 1.   INSTALL CORE ${NC}"
+    echo -e "${White}| 2.   Config Tunnel ${NC}"
+    echo -e "${cyan}| 3.   Unistall ${NC}"
+    echo -e "${White}| 0.   Exit ${NC}"
     echo "══════════════════════════════════════════════════════════════════════════════════════"
     echo -e "\033[0m"
 
@@ -104,7 +104,7 @@ _/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/_
         unistall
         ;;
     0)
-        echo -e "${GREEN}Exiting program...${NC}"
+        echo -e "${Purple}Exit...${NC}"
         exit 0
         ;;
     *)
@@ -117,10 +117,13 @@ _/___/________/_/__/_(___(_/_____(_ __/___|/____(___ _(_ __|/_|/__(___/_/_____/_
 
 install_core(){
 
-wget https://github.com/radkesvat/WaterWall/releases/download/v1.21/Waterwall-linux-64.zip
-apt install unzip && unzip Waterwall-linux-64.zip
-chmod +rwx Waterwall
-    
+        mkdir /root/RRT
+        cd /root/RRT
+        wget https://github.com/radkesvat/WaterWall/releases/download/v1.25/Waterwall-linux-64.zipp
+        apt install unzip -y
+        unzip Waterwall-linux-64.zip
+        chmod +x Waterwall
+        rm Waterwall-linux-64.zip
 cat <<EOL > core.json
     {
         "log": {
@@ -167,17 +170,17 @@ config_tunnel(){
 
         clear
                                                                                                        
-        echo -e "|${GREEN}Server Country    |${NC} $SERVER_COUNTRY"
-        echo -e "|${GREEN}Server IP         |${NC} $SERVER_IP"
-        echo -e "|${GREEN}Server ISP        |${NC} $SERVER_ISP"
-        echo -e "|${GREEN}WaterWall CORE    |${NC} $WATER_CORE"
-        echo -e "|${GREEN}WaterWall Tunnel  |${NC} $WATER_TUNNEL"
+        echo -e "|${cyan}Server Country    |${NC} $SERVER_COUNTRY"
+        echo -e "|${White}Server IP         |${NC} $SERVER_IP"
+        echo -e "|${cyan}Server ISP        |${NC} $SERVER_ISP"
+        echo -e "|${White}WaterWall CORE    |${NC} $WATER_CORE"
+        echo -e "|${cyan}WaterWall Tunnel  |${NC} $WATER_TUNNEL"
         echo "══════════════════════════════════════════════════════════════════════════════════════"
-        echo -e "${GREEN}Please choose an option:${NC}"
+        echo -e "${Purple}Please choose an option:${NC}"
         echo "══════════════════════════════════════════════════════════════════════════════════════"
-        echo -e "${BLUE}| 1  - IRAN"
-        echo -e "${BLUE}| 2  - Kharej"
-        echo -e "${BLUE}| 0  - Exit"
+        echo -e "${cyan}| 1  - IRAN"
+        echo -e "${White}| 2  - Kharej"
+        echo -e "${cyan}| 0  - Exit"
         echo "══════════════════════════════════════════════════════════════════════════════════════"
         echo -e "\033[0m"
 
@@ -188,7 +191,7 @@ config_tunnel(){
             read -p "Enter SNI : " clear_sni
             read -p "Enter Kharej IP : " kharej_ip
 
-cat <<EOL > dev-ir.json
+cat <<EOL > iran.json
 {
     "name": "reverse_reality_grpc_hd_multiport_server",
     "nodes": [
@@ -408,11 +411,13 @@ EOL
 unistall(){
 
     echo $'\e[32mUninstalling WaterWall in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
-    rm Waterwall-linux-64.zip
-    rm Waterwall-linux-64.zip*
-    rm Waterwall
-    rm dev-ir.json
-    rm core.json
+    sudo systemctl stop waterwall
+    sudo systemctl disable waterwall
+    rm -rf /etc/systemd/system/waterwall.service
+    pkill -f Waterwall
+    rm -rf /root/RRT
+    echo "Removed"
+    read -p "Press Enter to continue"
     clear
     echo 'WaterWall Unistalled :(';
     }
