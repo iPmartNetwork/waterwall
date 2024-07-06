@@ -215,9 +215,9 @@ EOF
     if [ "$choice" -eq 1 ]; then
         public_ip=$(wget -qO- https://api.ipify.org)
         echo -e "${Cyan}You chose Iran.${NC}"
-        read -p "enter Kharej Ipv4: " kharej_ip
-        read -p "Enter the SNI (default: ipmart.shop): " clear_sni
-        HOSTNAME=${clear_sni:-ipmart.shop}
+        read -p "enter Kharej Ipv4: " ip_remote
+        read -p "Enter the SNI (default: ipmart.shop): " input_sni
+        HOSTNAME=${input_sni:-ipmart.shop}
         cat > config.json << EOF
 {
     "name": "reverse_reality_grpc_hd_multiport_server",
@@ -283,7 +283,7 @@ EOF
             "type": "RealityServer",
             "settings": {
                 "destination": "reality_dest",
-                "password": "2249002AHS"
+                "password": "2200AHS490"
             },
             "next": "halfs"
         },
@@ -295,7 +295,7 @@ EOF
                 "port": 443,
                 "nodelay": true,
                 "whitelist": [
-                    "$kharej_ip/32"
+                    "$ip_remote/32"
                 ]
             },
             "next": "reality_server"
@@ -305,7 +305,7 @@ EOF
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address": "$clear_sni",
+                "address": "$HOSTNAME",
                 "port": 443
             }
         }
@@ -399,8 +399,8 @@ EOF
             "name": "reality_client",
             "type": "RealityClient",
             "settings": {
-                "sni": "$clear_sni",
-                "password": "2249002AHS"
+                "sni": "$HOSTNAME",
+                "password": "2200AHS490"
             },
             "next": "outbound_to_iran"
         },
@@ -409,7 +409,7 @@ EOF
             "type": "TcpConnector",
             "settings": {
                 "nodelay": true,
-                "address": "$iran_ip",
+                "address": "$ip_remote",
                 "port": 443
             }
         }
@@ -420,8 +420,8 @@ EOF
         setup_waterwall_service
         sleep 0.5
         echo -e "${Purple}Kharej IPv4 is: $public_ip${NC}"
-        echo -e "${Cyan}Iran IPv4 is: $iran_ip${NC}"
-        echo -e "${Purple}SNI $clear_sni${NC}"
+        echo -e "${Cyan}Iran IPv4 is: $ip_remote${NC}"
+        echo -e "${Purple}SNI $HOSTNAME${NC}"
         echo -e "${Cyan}Kharej Setup Successfully Created ${NC}"
         read -p "Press Enter to continue"
     elif [ "$choice" -eq 3 ]; then
