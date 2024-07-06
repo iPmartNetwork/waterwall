@@ -60,7 +60,7 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/halfdupl
 ```
 
 
-### mux , half , reverse , cdn
+### reverse reality grpc hd
 
 
 ```
