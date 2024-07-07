@@ -114,7 +114,7 @@ install_waterwall() {
 		fi
 
 		echo -e "${green}Waterwall installed successfully in $INSTALL_DIR.${rest}"
-		echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+		echo -e "${cyan}============================${rest}"
 		return 0
 	fi
 }
@@ -140,13 +140,13 @@ install_acme() {
 
 # SSL Menu
 ssl_cert_issue_main() {
-	echo -e "══════════════════════════════════════════════════════════════════════════════════════""
-	echo -e "${yellow}      |${purple} [1]${green} Get SSL Certificate${yellow} |${rest}"
-	echo -e "${yellow}      |${purple} [2]${green} Revoke${yellow}              |${rest}"
-	echo -e "${yellow}      |${purple} [3]${green} Force Renew${yellow}         |${rest}"
-	echo -e "══════════════════════════════════════════════════════════════════════════════════════""
-	echo -e "${yellow}      |${purple}  [0]${green} Back to Main Menu${yellow}  |${rest}"
-	echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+	echo -e "${yellow}      ════════════════════════════════════════════${rest}"
+	echo -e "${yellow}      |${purple} 1.${green} Get SSL Certificate${yellow} |${rest}"
+	echo -e "${yellow}      |${purple} 2.${green} Revoke${yellow}              |${rest}"
+	echo -e "${yellow}      |${purple} 3.${green} Force Renew${yellow}         |${rest}"
+	echo -e "${yellow}      |${blue}════════════════════════════════════════════${yellow}|${rest}"
+	echo -e "${yellow}      |${purple}  0.${green} Back to Main Menu${yellow}  |${rest}"
+	echo -e "${yellow}      ════════════════════════════════════════════${rest}"
 	echo -en "${cyan}      Enter your choice (1-3): ${rest}"
 	read -r choice
 	case "$choice" in
@@ -158,29 +158,29 @@ ssl_cert_issue_main() {
 		;;
 	2)
 		local domain=""
-		echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 		echo -en "${green}Please enter your domain name to revoke the certificate: ${rest}"
 		read -r domain
 		~/.acme.sh/acme.sh --revoke -d "${domain}"
 		if [ $? -ne 0 ]; then
-			echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+			echo -e "${cyan}════════════════════════════════════════════${rest}"
 			echo -e "${red}Failed to revoke certificate. Please check logs.${rest}"
 		else
-			echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+			echo -e "${cyan}════════════════════════════════════════════${rest}"
 			echo -e "${green}Certificate revoked${rest}"
 		fi
 		;;
 	3)
 		local domain=""
-		echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 		echo -en "${green}Please enter your domain name to forcefully renew an SSL certificate: ${rest}"
 		read -r domain
 		~/.acme.sh/acme.sh --renew -d "${domain}" --force
 		if [ $? -ne 0 ]; then
-			echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+			echo -e "${cyan}════════════════════════════════════════════${rest}"
 			echo -e "${red}Failed to renew certificate. Please check logs.${rest}"
 		else
-			echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+			echo -e "${cyan}════════════════════════════════════════════${rest}"
 			echo -e "${green}Certificate renewed${rest}"
 		fi
 		;;
@@ -189,7 +189,7 @@ ssl_cert_issue_main() {
 }
 
 ssl_cert_issue() {
-	echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+	echo -e "${cyan}════════════════════════════════════════════${rest}"
 	release=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
 	# check for acme.sh first
 	if [ ! -f ~/.acme.sh/acme.sh ]; then
@@ -224,7 +224,7 @@ ssl_cert_issue() {
 		echo -e "${red}install socat failed, please check logs${rest}"
 		exit 1
 	else
-		echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 	fi
 
 	# get the domain here,and we need verify it
@@ -395,12 +395,12 @@ EOF
     fi
 }
 
-#2
+#1
 # Tls Tunnel
 tls() {
 	# Function to create tls port to port iran
 	create_tls_port_to_port_iran() {
-		echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 		echo -en "${green}Enter Your Domain:${rest} "
 		read -r domain
 		echo -en "${green}Enter the local port: ${rest}"
@@ -419,7 +419,7 @@ tls() {
 			echo -en "${green}Do you want to Enable PreConnect ? (yes/no) [default: yes]: ${rest}"
 			read -r PreConnect
 			PreConnect=${PreConnect:-yes}
-			echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+			echo -e "${cyan}════════════════════════════════════════════${rest}"
 		fi
 
 		if [ "$http2" == "no" ] && [ "$PreConnect" == "no" ]; then
@@ -528,7 +528,7 @@ EOF
 
 	# Function to create tls port to port config
 	create_tls_port_to_port_kharej() {
-		echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 		echo -en "${green}Enter Your Domain: ${rest}"
 		read -r domain
 		echo -en "${green}Enter the local port: ${rest}"
@@ -630,7 +630,7 @@ EOF
 
 	# Function to create tls multi port iran
 	create_tls_multi_port_iran() {
-		echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 		echo -en "${green}Enter Your Domain: ${rest}"
 		read -r domain
 		echo -en "${green}Enter the starting local port (greater than 23): ${rest}"
@@ -651,7 +651,7 @@ EOF
 			echo -en "${green}Do you want to Enable PreConnect ? (yes/no) [default: yes]: ${rest}"
 			read -r PreConnect
 			PreConnect=${PreConnect:-yes}
-			echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+			echo -e "${cyan}════════════════════════════════════════════${rest}"
 		fi
 
 		if [ "$http2" == "no" ] && [ "$PreConnect" == "no" ]; then
@@ -763,7 +763,7 @@ EOF
 
 	# Function to create tls multi port kharej
 	create_tls_multi_port_kharej() {
-		echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 		echo -en "${green}Enter the local port: ${rest}"
 		read -r local_port
 		echo -en "${green}Do you want to Enable Http2 ? (yes/no) [default: yes] : ${rest}"
@@ -864,15 +864,15 @@ EOF
 		echo -e "${yellow}You should get [SSL CERTIFICATE] for your domain in main Menu${rest}"
 	}
 
-	echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+	echo -e "${yellow}      ════════════════════════════════════════════${rest}"
 	echo -e "${yellow}      |${purple} [1]${green} Tls port to port Iran${yellow}   |${rest}"
 	echo -e "${yellow}      |${purple} [2]${green} Tls port to port kharej${yellow} |${rest}"
-	echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+	echo -e "${yellow}      |${blue}════════════════════════════════════════════${yellow}|${rest}"
 	echo -e "${yellow}      |${purple} [3]${green} Tls Multiport iran${yellow}      |${rest}"
 	echo -e "${yellow}      |${purple} [4]${green} Tls Multiport kharej${yellow}    |${rest}"
-	echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+	echo -e "${yellow}      |${blue}════════════════════════════════════════════${yellow}|${rest}"
 	echo -e "${yellow}      | ${purple} [0]${green} ${green}Back to ${purple}Main Menu${yellow}      |${rest}"
-	echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+	echo -e "${yellow}      ════════════════════════════════════════════${rest}"
 	echo -en "${cyan}      Enter your choice (1-4): ${rest}"
 	read -r choice
 
@@ -905,16 +905,16 @@ EOF
 # Uninstall Waterwall
 uninstall_waterwall() {
 	if [ -f ~/Waterwall/config.json ] || [ -f /etc/systemd/system/Waterwall.service ]; then
-	    echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+	    echo -e "${cyan}════════════════════════════════════════════${rest}"
 		echo -en "${green}Press Enter to continue, or Ctrl+C to cancel.${rest}"
 		read -r
 		if [ -d ~/Waterwall/cert ] || [ -f ~/.acme/acme.sh ]; then
-			echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+			echo -e "${cyan}════════════════════════════════════════════${rest}"
 			echo -en "${green}Do you want to delete the Domain Certificates? (yes/no): ${rest}"
 			read -r delete_cert
 
 			if [[ "$delete_cert" == "yes" ]]; then
-				echo -e "══════════════════════════════════════════════════════════════════════════════════════"
+				echo -e "${cyan}════════════════════════════════════════════${rest}"
 				echo -en "${green}Enter Your domain: ${rest}"
 				read -r domain
 
@@ -928,13 +928,13 @@ uninstall_waterwall() {
 		systemctl stop Waterwall.service >/dev/null 2>&1
 		systemctl disable Waterwall.service >/dev/null 2>&1
 		rm -rf /etc/systemd/system/Waterwall.service >/dev/null 2>&1
-		echo -e "${cyan}============================${rest}"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 		echo -e "${green}Waterwall has been uninstalled successfully.${rest}"
-		echo -e "${cyan}============================${rest}"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 	else
-		echo -e "${cyan}============================${rest}"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 		echo -e "${red}Waterwall is not installed.${rest}"
-		echo -e "${cyan}============================${rest}"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 	fi
 }
 #===================================
@@ -996,9 +996,9 @@ EOL
 # Check Install service
 check_install_service() {
 	if [ -f /etc/systemd/system/Waterwall.service ]; then
-		echo -e "${cyan}===================================${rest}"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 		echo -e "${red}Please uninstall the existing Waterwall service before continuing.${rest}"
-		echo -e "${cyan}===================================${rest}"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 		exit 1
 	fi
 }
@@ -1019,10 +1019,10 @@ check_waterwall_status() {
 	# Check the status of the tunnel service
 	if sudo systemctl is-active --quiet Waterwall.service; then
 		echo -e "${cyan}Waterwall Installed successfully :${green} [running ✔] ${rest}"
-		echo -e "${cyan}============================================${rest}"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 	else
 		echo -e "${yellow}Waterwall is not installed or ${red}[Not running ✗ ] ${rest}"
-		echo -e "${cyan}==============================================${rest}"
+		echo -e "${cyan}════════════════════════════════════════════${rest}"
 	fi
 }
 #===================================
@@ -1031,11 +1031,9 @@ check_waterwall_status() {
 check_trojan_status() {
 	# Check the status of the tunnel service
 	if sudo systemctl is-active --quiet trojan.service; then
-    echo -e "${cyan}══════════════════════════════════════════════════${rest}"
 		echo -e "${yellow}     Trojan :${green}    [running ✔] ${rest}"
 	else
 		echo -e "${yellow}     Trojan: ${red}    [Not running ✗ ] ${rest}"
-    echo -e "${cyan}══════════════════════════════════════════════════${rest}"
 	fi
 }
 #===================================
@@ -1046,21 +1044,21 @@ main() {
 	echo ""
 	check_tunnel_status
 	check_trojan_status
-	echo -e " 1.${cyan} SSL Certificate Management${rest}"
-	echo -e " 2.${White} Tls Tunnel${rest}"
+	echo -e " 1.${cyan} Tls Tunnel${rest}"
+	echo -e " 2.${cyan} SSL Certificate Management${rest}"
 	echo -e " 3.${cyan} Uninstall Waterwall${rest}"
-	echo -e " 0.${White} Exit${rest}"
+	echo -e " 0.${cyan} Exit${rest}"
 
 	echo -en "${cyan}Enter your choice (1-3): ${rest}"
 	read -r choice
 
 	case $choice in
 	1)
-		ssl_cert_issue_main
-		;;
-	2)
 		check_install_service
 		tls
+		;;
+	2)
+		ssl_cert_issue_main
 		;;
 	3)
 		uninstall_waterwall
