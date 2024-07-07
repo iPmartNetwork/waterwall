@@ -399,262 +399,30 @@ EOF
 #===================================
 
 #2
-# Tls Tunnel
-tls() {
-	# Function to create tls port to port iran
-	create_tls_port_to_port_iran() {
-		echo -e "${cyan}════════════════════════════════════════════${rest}"
-		echo -en "${purple}Enter Your Domain:${rest} "
-		read -r domain
-		echo -en "${purple}Enter the local port: ${rest}"
-		read -r local_port
-		echo -en "${purple}Enter the remote address: ${rest}"
-		read -r remote_address
-		echo -en "${purple}Enter the remote port: ${rest}"
-		read -r remote_port
-		echo -en "${purple}Do you want to Enable Http2 ? (yes/no) [default: yes] : ${rest}"
-		read -r http2
-		http2=${http2:-yes}
-		if [ "$http2" == "yes" ]; then
-			echo -en "${purple}Enter the Connection port: ${rest}"
-			read -r connection_port
-		else
-			echo -en "${purple}Do you want to Enable PreConnect ? (yes/no) [default: yes]: ${rest}"
-			read -r PreConnect
-			PreConnect=${PreConnect:-yes}
-			echo -e "${cyan}════════════════════════════════════════════${rest}"
-		fi
-
-		if [ "$http2" == "no" ] && [ "$PreConnect" == "no" ]; then
-			output="sslclient"
-		elif [ "$http2" == "no" ] && [ "$PreConnect" == "yes" ]; then
-			output="precon_client"
-		else
-			output="pbclient"
-		fi
-
-		install_waterwall
-
-		json=$(
-			cat <<EOF
-{
-    "name": "tls_port_to_port_iran",
-    "nodes": [
-        {
-            "name": "input",
-            "type": "TcpListener",
-            "settings": {
-                "address": "0.0.0.0",
-                "port": $local_port,
-                "nodelay": true
-            },
-            "next": "$output"
-        },
-EOF
-		)
-
-		if [ "$http2" == "yes" ]; then
-			json+=$(
-				cat <<EOF
-
-        {
-            "name": "pbclient",
-            "type": "ProtoBufClient",
-            "settings": {},
-            "next": "h2client"
-        },
-        {
-            "name": "h2client",
-            "type": "Http2Client",
-            "settings": {
-                "host": "$domain",
-                "port": $connection_port,
-                "path": "/",
-                "content-type": "application/grpc"
-            },
-            "next": "sslclient"
-        },
-EOF
-			)
-		else
-			if [ "$PreConnect" == "yes" ]; then
-				json+=$(
-					cat <<EOF
-
-        {
-            "name": "precon_client",
-            "type": "PreConnectClient",
-            "settings": {
-                "minimum-unused": 1
-            },
-            "next": "sslclient"
-        },
-EOF
-				)
-			fi
-		fi
-
-		if [ "$http2" == "yes" ]; then
-			alpn="h2"
-		else
-			alpn="http/1.1"
-		fi
-
-		json+=$(
-			cat <<EOF
-		
-        {
-            "name": "sslclient",
-            "type": "OpenSSLClient",
-            "settings": {
-                "sni": "$domain",
-                "verify": true,
-                "alpn": "$alpn"
-            },
-            "next": "output"
-        },
-        {
-            "name": "output",
-            "type": "TcpConnector",
-            "settings": {
-                "nodelay": true,
-                "address": "$remote_address",
-                "port": $remote_port
-            }
-        }
-    ]
-}
-EOF
-		)
-		echo "$json" >/root/Waterwall/config.json
-	}
-
-	# Function to create tls port to port config
-	create_tls_port_to_port_kharej() {
-		echo -e "${cyan}════════════════════════════════════════════${rest}"
-		echo -en "${purple}Enter Your Domain: ${rest}"
-		read -r domain
-		echo -en "${purple}Enter the local port: ${rest}"
-		read -r local_port
-		echo -en "${purple}Enter the remote port: ${rest}"
-		read -r remote_port
-		echo -en "${purple}Do you want to Enable Http2 ? (yes/no) [default: yes] : ${rest}"
-		read -r http2
-		http2=${http2:-yes}
-		if [ "$http2" == "yes" ]; then
-			echo -en "${purple}Enter the Connection port: ${rest}"
-			read -r connection_port
-		fi
-
-		if [ "$http2" == "yes" ]; then
-			output="pbserver"
-		else
-			output="output"
-		fi
-
-		install_waterwall
-
-		json=$(
-			cat <<EOF
-{
-    "name": "tls_port_to_port_kharej",
-    "nodes": [
-        {
-            "name": "input",
-            "type": "TcpListener",
-            "settings": {
-                "address": "0.0.0.0",
-                "port": $local_port,
-                "nodelay": true
-            },
-            "next": "sslserver"
-        },
-        {
-            "name": "sslserver",
-            "type": "OpenSSLServer",
-            "settings": {
-                "cert-file": "/root/Waterwall/cert/fullchain.pem",
-                "key-file": "/root/Waterwall/cert/privkey.pem",
-                "alpns": [
-                    {
-                        "value": "h2",
-                        "next": "node->next"
-                    },
-                    {
-                        "value": "http/1.1",
-                        "next": "node->next"
-                    }
-                ]
-            },
-            "next": "$output"  
-        },
-EOF
-		)
-
-		if [ "$http2" == "yes" ]; then
-			json+=$(
-				cat <<EOF
-
-        {
-            "name": "pbserver",
-            "type": "ProtoBufServer",
-            "settings": {},
-            "next": "h2server"
-        },
-        {
-            "name": "h2server",
-            "type": "Http2Server",
-            "settings": {},
-            "next": "output"
-        },
-EOF
-			)
-		fi
-
-		json+=$(
-			cat <<EOF
-		
-        {
-            "name": "output",
-            "type": "Connector",
-            "settings": {
-                "nodelay": true,
-                "address": "127.0.0.1",
-                "port": $remote_port
-            }
-        }
-    ]
-}
-EOF
-		)
-		echo "$json" >/root/Waterwall/config.json
-		echo -e "${White}You should get [SSL CERTIFICATE] for your domain in main Menu${rest}"
-	}
-
-	# Function to create tls multi port iran
+# Function to create tls multi port iran
 	create_tls_multi_port_iran() {
-		echo -e "${cyan}════════════════════════════════════════════${rest}"
-		echo -en "${purple}Enter Your Domain: ${rest}"
+		echo -e "${cyan}============================${rest}"
+		echo -en "${green}Enter Your Domain: ${rest}"
 		read -r domain
-		echo -en "${purple}Enter the starting local port (greater than 23): ${rest}"
+		echo -en "${green}Enter the starting local port (greater than 23): ${rest}"
 		read -r start_port
-		echo -en "${purple}Enter the ending local port (less than 65535): ${rest}"
+		echo -en "${green}Enter the ending local port (less than 65535): ${rest}"
 		read -r end_port
-		echo -en "${purple}Enter the remote address: ${rest}"
+		echo -en "${green}Enter the remote address: ${rest}"
 		read -r remote_address
-		echo -en "${purple}Enter the remote port: ${rest}"
+		echo -en "${green}Enter the remote port: ${rest}"
 		read -r remote_port
-		echo -en "${purple}Do you want to Enable Http2 ? (yes/no) [default: yes] : ${rest}"
+		echo -en "${green}Do you want to Enable Http2 ? (yes/no) [default: yes] : ${rest}"
 		read -r http2
 		http2=${http2:-yes}
 		if [ "$http2" == "yes" ]; then
-			echo -en "${purple}Enter the Connection port: ${rest}"
+			echo -en "${green}Enter the Connection port: ${rest}"
 			read -r connection_port
 		else
-			echo -en "${purple}Do you want to Enable PreConnect ? (yes/no) [default: yes]: ${rest}"
+			echo -en "${green}Do you want to Enable PreConnect ? (yes/no) [default: yes]: ${rest}"
 			read -r PreConnect
 			PreConnect=${PreConnect:-yes}
-			echo -e "${cyan}════════════════════════════════════════════${rest}"
+			echo -e "${cyan}============================${rest}"
 		fi
 
 		if [ "$http2" == "no" ] && [ "$PreConnect" == "no" ]; then
@@ -766,10 +534,10 @@ EOF
 
 	# Function to create tls multi port kharej
 	create_tls_multi_port_kharej() {
-		echo -e "${cyan}════════════════════════════════════════════${rest}"
-		echo -en "${purple}Enter the local port: ${rest}"
+		echo -e "${cyan}============================${rest}"
+		echo -en "${green}Enter the local port: ${rest}"
 		read -r local_port
-		echo -en "${purple}Do you want to Enable Http2 ? (yes/no) [default: yes] : ${rest}"
+		echo -en "${green}Do you want to Enable Http2 ? (yes/no) [default: yes] : ${rest}"
 		read -r http2
 		http2=${http2:-yes}
 
