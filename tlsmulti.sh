@@ -677,7 +677,7 @@ EOF
             "type": "TcpListener",
             "settings": {
                 "address": "0.0.0.0",
-                "port": [23,65535],
+                "port": [$start_port,$end_port],
                 "nodelay": true
             },
             "next": "port_header"
@@ -872,7 +872,7 @@ EOF
 	echo -e "${White}  ${purple} 2.${purple} Tls Multiport kharej${White}    ${rest}"
 	echo -e "${White}  ${blue}════════════════════════════════════════════${White}${rest}"
 	echo -e "${White}  ${purple} [0]${purple} ${purple}Back to ${purple}Main Menu${White}      |${rest}"
-	echo -e "${White}      ════════════════════════════════════════════${rest}"
+	echo -e "${White}  ════════════════════════════════════════════${rest}"
 	echo -en "${cyan}   Enter your choice (1-2): ${rest}"
 	read -r choice
 
