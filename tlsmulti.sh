@@ -1059,4 +1059,4 @@ main() {
 		;;
 	esac
 }
-mai
+main
