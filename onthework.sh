@@ -17,7 +17,7 @@ purple='\033[0;35m'
 Cyan='\033[0;36m'
 cyan='\033[0;36m'
 CYAN='\033[0;36m'
-yellow='\033[0;33m'
+White='\033[0;33m'
 White='\033[0;96m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
@@ -59,7 +59,7 @@ check_dependencies() {
 
 	for dep in "${dependencies[@]}"; do
 		if ! command -v "${dep}" &>/dev/null; then
-			echo -e "${cyan} ${dep} ${cyan}is not installed. Installing...${rest}"
+			echo -e "${cyan} ${dep} ${White}is not installed. Installing...${rest}"
 			sudo "${p_m}" install "${dep}" -y
 		fi
 	done
@@ -122,7 +122,7 @@ install_waterwall() {
 
 #===================================
 
-#1
+#9
 # SSL CERTIFICATE
 install_acme() {
 	cd ~
@@ -141,13 +141,13 @@ install_acme() {
 
 # SSL Menu
 ssl_cert_issue_main() {
-	echo -e "${cyan}      ════════════════════════════════════════════${rest}"
-	echo -e "${cyan}      |${purple} 1.${purple} Get SSL Certificate${cyan} ${rest}"
-	echo -e "${cyan}      |${purple} 2.${purple} Revoke${cyan}              ${rest}"
-	echo -e "${cyan}      |${purple} 3.${purple} Force Renew${cyan}         ${rest}"
-	echo -e "${cyan}      |${blue}════════════════════════════════════════════${cyan}|${rest}"
-	echo -e "${cyan}      |${purple}  0.${purple} Back to Main Menu${cyan}  |${rest}"
-	echo -e "${cyan}      ════════════════════════════════════════════${rest}"
+	echo -e "${White}      ===================================${rest}"
+	echo -e "${White}      ${purple} 1.${purple} Get SSL Certificate${White} ${rest}"
+	echo -e "${White}      ${purple} 2.${purple} Revoke${White}              ${rest}"
+	echo -e "${White}      ${purple} 3.${purple} Force Renew${White}         ${rest}"
+	echo -e "${White}      ${blue}===================================${White}${rest}"
+	echo -e "${White}      ${purple} 0.${purple} Back to Main Menu${White}  ${rest}"
+	echo -e "${White}      ===================================${rest}"
 	echo -en "${cyan}      Enter your choice (1-3): ${rest}"
 	read -r choice
 	case "$choice" in
@@ -159,29 +159,29 @@ ssl_cert_issue_main() {
 		;;
 	2)
 		local domain=""
-		echo -e "${cyan}════════════════════════════════════════════${rest}"
+		echo -e "${cyan}============================================${rest}"
 		echo -en "${purple}Please enter your domain name to revoke the certificate: ${rest}"
 		read -r domain
 		~/.acme.sh/acme.sh --revoke -d "${domain}"
 		if [ $? -ne 0 ]; then
-			echo -e "${cyan}════════════════════════════════════════════${rest}"
+			echo -e "${cyan}============================================${rest}"
 			echo -e "${red}Failed to revoke certificate. Please check logs.${rest}"
 		else
-			echo -e "${cyan}════════════════════════════════════════════${rest}"
+			echo -e "${cyan}============================================${rest}"
 			echo -e "${purple}Certificate revoked${rest}"
 		fi
 		;;
 	3)
 		local domain=""
-		echo -e "${cyan}════════════════════════════════════════════${rest}"
+		echo -e "${cyan}============================================${rest}"
 		echo -en "${purple}Please enter your domain name to forcefully renew an SSL certificate: ${rest}"
 		read -r domain
 		~/.acme.sh/acme.sh --renew -d "${domain}" --force
 		if [ $? -ne 0 ]; then
-			echo -e "${cyan}════════════════════════════════════════════${rest}"
+			echo -e "${cyan}============================================${rest}"
 			echo -e "${red}Failed to renew certificate. Please check logs.${rest}"
 		else
-			echo -e "${cyan}════════════════════════════════════════════${rest}"
+			echo -e "${cyan}============================================${rest}"
 			echo -e "${purple}Certificate renewed${rest}"
 		fi
 		;;
@@ -190,7 +190,7 @@ ssl_cert_issue_main() {
 }
 
 ssl_cert_issue() {
-	echo -e "${cyan}════════════════════════════════════════════${rest}"
+	echo -e "${cyan}============================================${rest}"
 	release=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
 	# check for acme.sh first
 	if [ ! -f ~/.acme.sh/acme.sh ]; then
@@ -225,14 +225,14 @@ ssl_cert_issue() {
 		echo -e "${red}install socat failed, please check logs${rest}"
 		exit 1
 	else
-		echo -e "${cyan}════════════════════════════════════════════${rest}"
+		echo -e "${cyan}============================${rest}"
 	fi
 
 	# get the domain here,and we need verify it
 	local domain=""
 	echo -en "${purple}Please enter your domain name: ${rest}"
 	read -r domain
-	echo -e "${purple}Your domain is:${cyan}${domain}${purple},check it...${rest}"
+	echo -e "${purple}Your domain is:${White}${domain}${purple},check it...${rest}"
 
 	# check if there already exists a cert
 	local currentCert
@@ -274,7 +274,7 @@ ssl_cert_issue() {
 		rm -rf ~/.acme.sh/"${domain}"
 		exit 1
 	else
-		echo -e "${cyan}issue certs succeed,installing certs...${rest}"
+		echo -e "${White}issue certs succeed,installing certs...${rest}"
 	fi
 	# install cert
 	~/.acme.sh/acme.sh --installcert -d "${domain}" \
@@ -344,6 +344,52 @@ create_core_json() {
     },
     "configs": [
         "config.json"
+    ]
+}
+EOF
+	fi
+}
+
+#===================================
+
+#0
+# Trojan Core.json
+create_trojan_core_json() {
+	if [ ! -d /root/Waterwall/trojan ]; then
+		mkdir -p /root/Waterwall/trojan
+	fi
+
+	if [ ! -f ~/Waterwall/trojan/core.json ]; then
+		echo -e "${cyan}Creating core.json...${rest}"
+		echo ""
+		cat <<EOF >~/Waterwall/trojan/core.json
+{
+    "log": {
+        "path": "log/",
+        "core": {
+            "loglevel": "DEBUG",
+            "file": "core.log",
+            "console": true
+        },
+        "network": {
+            "loglevel": "DEBUG",
+            "file": "network.log",
+            "console": true
+        },
+        "dns": {
+            "loglevel": "SILENT",
+            "file": "dns.log",
+            "console": false
+        }
+    },
+    "dns": {},
+    "misc": {
+        "workers": 0,
+        "ram-profile": "server",
+        "libs-path": "libs/"
+    },
+    "configs": [
+        "trojan_config.json"
     ]
 }
 EOF
@@ -582,7 +628,7 @@ EOF
 EOF
 		)
 		echo "$json" >/root/Waterwall/config.json
-		echo -e "${cyan}You should get [SSL CERTIFICATE] for your domain in main Menu${rest}"
+		echo -e "${White}You should get [SSL CERTIFICATE] for your domain in main Menu${rest}"
 	}
 
 	# Function to create tls multi port iran
@@ -631,7 +677,7 @@ EOF
             "type": "TcpListener",
             "settings": {
                 "address": "0.0.0.0",
-                "port": [$start_port,$end_port],
+                "port": [23,65535],,
                 "nodelay": true
             },
             "next": "port_header"
@@ -818,16 +864,16 @@ EOF
 EOF
 		)
 		echo "$json" >/root/Waterwall/config.json
-		echo -e "${cyan}You should get [SSL CERTIFICATE] for your domain in main Menu${rest}"
+		echo -e "${White}You should get [SSL CERTIFICATE] for your domain in main Menu${rest}"
 	}
 
-	echo -e "${cyan}      |${blue}════════════════════════════════════════════${cyan}|${rest}"
-	echo -e "${cyan}      |${purple} 1.${purple} Tls Multiport iran${cyan}      ${rest}"
-	echo -e "${cyan}      |${purple} 2.${purple} Tls Multiport kharej${cyan}    ${rest}"
-	echo -e "${cyan}      |${blue}════════════════════════════════════════════${cyan}|${rest}"
-	echo -e "${cyan}      | ${purple} [0]${purple} ${purple}Back to ${purple}Main Menu${cyan}      |${rest}"
-	echo -e "${cyan}      ════════════════════════════════════════════${rest}"
-	echo -en "${cyan}      Enter your choice (1-2): ${rest}"
+	echo -e "${White}  ${blue}════════════════════════════════════════════${White}${rest}"
+	echo -e "${White}  ${purple} 1.${purple} Tls Multiport iran${White}      ${rest}"
+	echo -e "${White}  ${purple} 2.${purple} Tls Multiport kharej${White}    ${rest}"
+	echo -e "${White}  ${blue}════════════════════════════════════════════${White}${rest}"
+	echo -e "${White}  ${purple} [0]${purple} ${purple}Back to ${purple}Main Menu${White}      |${rest}"
+	echo -e "${White}      ════════════════════════════════════════════${rest}"
+	echo -en "${cyan}   Enter your choice (1-2): ${rest}"
 	read -r choice
 
 	case $choice in
@@ -961,7 +1007,7 @@ check_install_service() {
 check_tunnel_status() {
 	# Check the status of the tunnel service
 	if sudo systemctl is-active --quiet Waterwall.service; then
-		echo -e "${cyan}     Waterwall :${purple} [running ✔] ${rest}"
+		echo -e "${White}     Waterwall :${purple} [running ✔] ${rest}"
 	fi
 }
 #===================================
@@ -973,7 +1019,7 @@ check_waterwall_status() {
 		echo -e "${cyan}Waterwall Installed successfully :${purple} [running ✔] ${rest}"
 		echo -e "${cyan}════════════════════════════════════════════${rest}"
 	else
-		echo -e "${cyan}Waterwall is not installed or ${red}[Not running ✗ ] ${rest}"
+		echo -e "${White}Waterwall is not installed or ${red}[Not running ✗ ] ${rest}"
 		echo -e "${cyan}════════════════════════════════════════════${rest}"
 	fi
 }
