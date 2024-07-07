@@ -121,7 +121,7 @@ install_waterwall() {
 
 #===================================
 
-#9
+#1
 # SSL CERTIFICATE
 install_acme() {
 	cd ~
@@ -395,7 +395,7 @@ EOF
     fi
 }
 
-#1
+#2
 # Tls Tunnel
 tls() {
 	# Function to create tls port to port iran
@@ -1054,11 +1054,11 @@ main() {
 
 	case $choice in
 	1)
-		check_install_service
-		tls
+		ssl_cert_issue_main
 		;;
 	2)
-		ssl_cert_issue_main
+		check_install_service
+		tls
 		;;
 	3)
 		uninstall_waterwall
