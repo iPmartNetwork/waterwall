@@ -73,7 +73,7 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/iPmart.s
 
 
 ```
-bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/ReverseTlsMulti.sh)
+bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/onthework.sh)
 
 ```
 
