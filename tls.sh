@@ -24,6 +24,8 @@ BLUE='\033[0;34m'
 MAGENTA='\033[0;35m'
 NC='\033[0m' # No Color
 
+clear
+
 # Detect the Linux distribution
 detect_distribution() {
 	if [ -f /etc/os-release ]; then
