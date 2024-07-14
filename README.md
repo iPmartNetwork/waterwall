@@ -69,11 +69,11 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/iPmart.s
 ```
 
 
-### reverse tls multi port
+### reverse tls
 
 
 ```
-bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/work.sh)
+bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/tls.sh)
 
 ```
 
@@ -83,6 +83,7 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/work.sh)
 [لینک اصلی پروژه](https://github.com/radkesvat/WaterWall)
 ---
 
+[تشکر ویژه از پیمان عزیز](https://github.com/Ptechgithub)
 
 
 
