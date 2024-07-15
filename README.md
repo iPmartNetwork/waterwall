@@ -77,6 +77,12 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/tls.sh)
 
 ```
 
+### Bgp4
+
+```
+bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/Bgp4.sh)
+
+```
 
 ---
 
