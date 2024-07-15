@@ -355,7 +355,7 @@ bgp4() {
 		read -r local_port
 		echo -en "${green}Enter the remote address: ${rest}"
 		read -r remote_address
-		echo -en "${green}Enter the remote (${yellow}Connection${green}) port [${yellow}Default: 179${green}]: ${rest}"
+		echo -en "${green}Enter the remote (${yellow}Connection${green}) port [${yellow}Default: 2249${green}]: ${rest}"
 		read -r remote_port
 		remote_port=${remote_port:-179}
 
