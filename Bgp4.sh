@@ -357,7 +357,7 @@ bgp4() {
 		read -r remote_address
 		echo -en "${green}Enter the remote (${yellow}Connection${green}) port [${yellow}Default: 2249${green}]: ${rest}"
 		read -r remote_port
-		remote_port=${remote_port:-179}
+		remote_port=${remote_port:-2249}
 
 		install_waterwall
 
@@ -400,9 +400,9 @@ EOF
 
 	create_bgp4_kharej() {
 		echo -e "${cyan}============================${rest}"
-		echo -en "${green}Enter the local (${yellow}Connection${green}) port [${yellow}Default: 179${green}]: ${rest}"
+		echo -en "${green}Enter the local (${yellow}Connection${green}) port [${yellow}Default: 2249${green}]: ${rest}"
 		read -r local_port
-		local_port=${local_port:-179}
+		local_port=${local_port:-2249}
 		echo -en "${green}Enter the remote (${yellow}Server Config ${green}) port: ${rest}"
 		read -r remote_port
 
@@ -455,7 +455,7 @@ EOF
 		read -r remote_address
 		echo -en "${cyan}Enter the remote (${yellow}Connection${green}) port [${yellow}Default: 2249${green}]: ${rest}"
 		read -r remote_port
-		remote_port=${remote_port:-179}
+		remote_port=${remote_port:-2249}
 
 		install_waterwall
 
@@ -506,9 +506,9 @@ EOF
 
 	create_bgp4_multiport_kharej() {
 		echo -e "${cyan}============================${rest}"
-		echo -en "${green}Enter the local (${yellow}Connection${green}) port [${yellow}Default: 179${green}]: ${rest}"
+		echo -en "${green}Enter the local (${yellow}Connection${green}) port [${yellow}Default: 2249${green}]: ${rest}"
 		read -r local_port
-		local_port=${local_port:-179}
+		local_port=${local_port:-2249}
 
 		install_waterwall
 
