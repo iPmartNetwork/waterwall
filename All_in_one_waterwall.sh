@@ -30,7 +30,10 @@ show_menu() {
     echo -e "${Cyan}2. Reality Direct Tunnel${NC}"
     echo -e "${White}3. http2 , mux , grpc${NC}"
     echo -e "${Cyan}4. HalfDuplex Tunnel or Direct${NC}"
-    echo -e "${White}0. Exit${NC}"
+    echo -e "${White}5. reverse reality grpc hd${NC}"
+    echo -e "${Cyan}6. reverse tls${NC}"
+    echo -e "${White}7. Bgp4${NC}"
+    echo -e "${Cyan}0. Exit${NC}"
 }
 
 # Loop until the user chooses to exit
@@ -54,6 +57,18 @@ while true; do
             clear
             bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/halfduplex.sh)
             ;;
+        5)
+            clear
+            bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/iPmart.sh)
+            ;;
+        6)
+            clear
+            bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/tls.sh)
+            ;;
+        7)
+            clear
+            bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/Bgp4.sh)
+            ;;          
         0)
             echo "Exit"
             break
