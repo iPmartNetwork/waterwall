@@ -1,6 +1,5 @@
 #!/bin/bash
 
-clear
 echo  "
 ══════════════════════════════════════════════════════════════════════════════════════
         ____                             _     _                                     
@@ -23,7 +22,7 @@ BLUE='\033[0;34m'
 MAGENTA='\033[0;35m'
 NC='\033[0m' # No Color
 
-
+	clear
 # Function to show the menu
 show_menu() {
     echo -e "${Purple}Please choose an option:${NC}"
