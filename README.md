@@ -84,6 +84,14 @@ bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/Bgp4.sh)
 
 ```
 
+### Reverse CDN Tunnel
+
+```
+bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/CDN.sh)
+
+```
+
+
 ---
 
 [لینک اصلی پروژه](https://github.com/radkesvat/WaterWall)
