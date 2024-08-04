@@ -216,8 +216,8 @@ EOF
         public_ip=$(wget -qO- https://api.ipify.org)
         echo -e "${Cyan}You chose Iran.${NC}"
         read -p "enter Kharej Ipv4: " ip_remote
-        read -p "Enter the SNI (default: ipmart.shop): " input_sni
-        HOSTNAME=${input_sni:-ipmart.shop}
+        read -p "Enter the SNI (default: zula.ir): " input_sni
+        HOSTNAME=${input_sni:-zula.ir}
         cat > config.json << EOF
 {
     "name": "reverse_reality_grpc_hd_multiport_server",
@@ -324,8 +324,8 @@ EOF
         public_ip=$(wget -qO- https://api.ipify.org)
         echo -e "${Purple}You chose Kharej.${NC}"
         read -p "enter Iran Ip: " ip_remote
-        read -p "Enter the SNI (default: ipmart.shop): " input_sni
-        HOSTNAME=${input_sni:-ipamart.shop}
+        read -p "Enter the SNI (default: zula.ir): " input_sni
+        HOSTNAME=${input_sni:-zula.ir}
         cat > config.json << EOF
 {
     "name": "reverse_reality_grpc_client_hd_multiport_client",
