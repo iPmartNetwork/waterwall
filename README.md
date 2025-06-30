@@ -17,13 +17,7 @@
 
 - اسکریپت روی هر دو سرور اجرا شود (خارج و ایران )
 
-### All in one waterwall
 
-
-```
-bash <(curl https://raw.githubusercontent.com/ipmartnetwork/iPmart/main/All_in_one_waterwall.sh)
-
-```
 
 
 
